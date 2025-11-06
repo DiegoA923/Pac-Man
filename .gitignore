@@ -23,7 +23,8 @@
 /nb-configuration.xml
 /.nb-gradle/
 /out/
-
+manifest.mf
+build.xml
 # Maven
 /target/
 
