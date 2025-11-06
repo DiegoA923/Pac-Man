@@ -1,4 +1,4 @@
-package udistrital.avanzada.pacman.Modelo.ModeloDAO;
+package udistrital.avanzada.pacman.servidor.Modelo.ModeloDAO;
 
 /**
  * Clase JugadorDAO.

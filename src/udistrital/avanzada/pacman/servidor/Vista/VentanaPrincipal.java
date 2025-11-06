@@ -1,5 +1,4 @@
-package udistrital.avanzada.pacman.Vista;
-
+package udistrital.avanzada.pacman.servidor.Vista;
 
 /**
  * Clase VentanaPrincipal.
@@ -14,4 +13,3 @@ package udistrital.avanzada.pacman.Vista;
 public class VentanaPrincipal {
 
 }
-

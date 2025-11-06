@@ -1,5 +1,4 @@
-package udistrital.avanzada.pacman.Control;
-
+package udistrital.avanzada.pacman.cliente.control;
 
 /**
  * Clase ControlPrincipal.
@@ -7,11 +6,10 @@ package udistrital.avanzada.pacman.Control;
  * Descripción:
  * </p>
  *
- * @author Diego
+ * @author Mauricio
  * @version 1.0
  * @since 2025-11-05
  */
 public class ControlPrincipal {
 
 }
-
