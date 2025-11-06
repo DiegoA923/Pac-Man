@@ -1,5 +1,4 @@
-package udistrital.avanzada.pacman.Modelo.ModeloConexion;
-
+package udistrital.avanzada.pacman.cliente.modelo.Conexion;
 
 /**
  * Clase IConexionProperties.
@@ -7,11 +6,10 @@ package udistrital.avanzada.pacman.Modelo.ModeloConexion;
  * Descripción:
  * </p>
  *
- * @author Diego
+ * @author Mauricio
  * @version 1.0
  * @since 2025-11-05
  */
 public interface IConexionProperties {
 
 }
-

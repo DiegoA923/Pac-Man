@@ -1,4 +1,4 @@
-package udistrital.avanzada.pacman.Modelo.ModeloConexion;
+package udistrital.avanzada.pacman.servidor.Modelo.ModeloConexion;
 
 /**
  * Clase IConexionAleatorio.

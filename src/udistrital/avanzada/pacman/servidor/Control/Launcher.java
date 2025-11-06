@@ -1,4 +1,4 @@
-package udistrital.avanzada.pacman.Control;
+package udistrital.avanzada.pacman.servidor.Control;
 
 /**
  * Clase Launcher.
@@ -22,7 +22,6 @@ public class Launcher {
      *
      * @param args argumentos de línea de comandos (no utilizados)
      */
-
     public static void main(String[] args) {
         new ControlPrincipal();
     }
