@@ -8,8 +8,7 @@ import java.util.Properties;
  * Clase ConexionProperties.
  * <p>
  * Implementa la interfaz {@link IConexionProperties} para gestionar 
- * la conexión y lectura del archivo de propiedades que contiene 
- * información de mascotas exóticas precargadas.
+ * la conexión y lectura del archivo de propiedades con los datos de configuracion
  * </p>
  * <p>
  * Esta clase se encarga únicamente de la lectura del archivo,
