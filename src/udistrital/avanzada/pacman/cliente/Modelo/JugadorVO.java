@@ -1,4 +1,4 @@
-package udistrital.avanzada.pacman.cliente.modelo;
+package udistrital.avanzada.pacman.cliente.Modelo;
 
 /**
  * Clase JugadorVO.
@@ -11,5 +11,19 @@ package udistrital.avanzada.pacman.cliente.modelo;
  * @since 2025-11-05
  */
 public class JugadorVO {
+    private String nombre;
+    private String contrasena;
 
+    public JugadorVO(String nombre, String contrasena) {
+        this.nombre = nombre;
+        this.contrasena = contrasena;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public String getContrasena() {
+        return contrasena;
+    }
 }
