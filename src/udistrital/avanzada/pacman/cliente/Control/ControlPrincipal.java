@@ -45,7 +45,6 @@ public class ControlPrincipal {
                 cliente.configSocket(server[0], Integer.parseInt(server[1]));
             } catch (Exception e) {
             }
-            
             //Propiedades no existen retornar
             if(!usuarioValido || cliente.getIp() == null ||  cliente.getPuerto() < 0) {
                 cJugador.resetJugador();
@@ -55,7 +54,9 @@ public class ControlPrincipal {
             }
             if(!cliente.conectar()){
                 cVentana.mostrarMensajeInformativo("Info", "No se pudo realizar la conexion al servidor");
-            };
+                return;
+            }            
+            
         } catch (Exception e) {
             cJugador.resetJugador();
             cliente.resetConfig();
