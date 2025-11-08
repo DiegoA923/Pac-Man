@@ -45,7 +45,7 @@ public class ControlJugador {
     /**
      * Metodo para obtener datos de jugador
      *
-     * @return
+     * @return array de string, indice 0 nombre, indice 1 contraseña
      */
     public String[] getDatosJugador() {
         String[] datos = new String[2];

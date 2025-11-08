@@ -31,7 +31,7 @@ public class ConexionProperties implements IConexionProperties {
     public ConexionProperties() {
         this.rutaArchivo = null;
         this.fis = null;
-    }
+    }        
 
     /**
      * Constructor con ruta personalizada.

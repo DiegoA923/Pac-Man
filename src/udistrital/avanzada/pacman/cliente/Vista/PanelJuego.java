@@ -5,11 +5,13 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
 
 /**
+ * Clase PanelJuego
+ *
+ * Maneja la vista del juego para que el usuario pueda jugar
  *
  * @author Mauricio
- */
-/*
-
+ * @version 1.0
+ * @since 2025-11-06
  */
 public class PanelJuego extends JPanel {
 
@@ -29,37 +31,49 @@ public class PanelJuego extends JPanel {
 
         add(panelSuperior, BorderLayout.NORTH);
 
-        areaTexto = new JTextArea();
+        areaTexto = new JTextArea(10, 30);
         areaTexto.setEditable(false);
         areaTexto.setLineWrap(true);
-        areaTexto.setWrapStyleWord(true);        
+        areaTexto.setWrapStyleWord(true);
 
         scrollPane = new JScrollPane(areaTexto);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
         add(scrollPane, BorderLayout.CENTER);
-
-//        txtMovimiento.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                String texto = txtMovimiento.getText().trim();
-//                if (!texto.isEmpty()) {
-//                    areaTexto.append(texto + "\n");
-//                    txtMovimiento.setText("");
-//                }
-//            }
-//        });
     }
-    
+
+    /**
+     * Metodo para añadir acción custom al cuandro de texto
+     *
+     * @param action
+     */
     public void addActionListenerTxtMovimiento(ActionListener action) {
         txtMovimiento.addActionListener(action);
     }
 
-    public void agregarTextoArea(String texto) {
+    /**
+     * Añadir resultado de juego y mostrarlo
+     *
+     * @param texto
+     */
+    public void mostrarResultado(String texto) {
         areaTexto.append(texto + "\n");
         txtMovimiento.setText("");
     }
+
+    /**
+     * Limpiar input y resultados
+     */
+    public void resetText() {
+        areaTexto.setText("");
+        txtMovimiento.setText("");
+    }
     
+    /**
+     * Obterner texto del campo texto moviento
+     * 
+     * @return 
+     */
     public String getTextMovimiento() {
         return txtMovimiento.getText().trim();
     }

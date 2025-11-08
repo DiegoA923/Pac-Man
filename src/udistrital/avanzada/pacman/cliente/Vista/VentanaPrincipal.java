@@ -1,6 +1,7 @@
 package udistrital.avanzada.pacman.cliente.Vista;
 
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.io.File;
 import javax.swing.*;
 import javax.swing.filechooser.*;
@@ -15,31 +16,42 @@ import javax.swing.filechooser.*;
  * @version 1.0
  * @since 2025-11-05
  */
-public class VentanaPrincipal extends JFrame {
-    
-    private JLabel lblArchivoPropEscogido;
-    private JLabel lblTitulo;
+public class VentanaPrincipal extends JFrame {   
     private JLabel lblMensaje;
     private JButton btnEscogerArchivo;
-    private JButton btnSalir;  
     private CardLayout cardLayout;
-    private JPanel contenedor;        
+    private JPanel contenedor;
 
     public VentanaPrincipal(PanelJuego panelJuego) throws HeadlessException {
         super("Cliente Pac-Man");
-
         // Configuración base de la ventana
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(400, 300);
         setLocationRelativeTo(null);
         setResizable(false);
         cardLayout = new CardLayout();
+        
+        JPanel escogerArchivo = new JPanel();
+        escogerArchivo.setLayout(new BoxLayout(escogerArchivo, BoxLayout.Y_AXIS));
+        escogerArchivo.setAlignmentX(Component.CENTER_ALIGNMENT);       
+        
+        lblMensaje = new JLabel("Seleccione el archivo de propiedades con la configuracion para iniciar");
+        lblMensaje.setAlignmentX(Component.CENTER_ALIGNMENT);
+        btnEscogerArchivo = new JButton("Seleccionar Archivo");
+        btnEscogerArchivo.setActionCommand("archivo");
+        btnEscogerArchivo.setAlignmentX(Component.CENTER_ALIGNMENT);           
+
+        escogerArchivo.add(lblMensaje);
+        escogerArchivo.add(Box.createVerticalStrut(10));
+        escogerArchivo.add(btnEscogerArchivo);
+                
         contenedor = new JPanel(cardLayout);
         
-        contenedor.add(panelJuego, "juego");
+        contenedor.add(escogerArchivo, "archivo");        
+        contenedor.add(panelJuego, "juego");        
                 
         add(contenedor, BorderLayout.CENTER);
-        setVisible(false);
+        setVisible(true);
     }    
     
     /**
@@ -77,7 +89,16 @@ public class VentanaPrincipal extends JFrame {
         );
     }
     
-    public void mostrarVentana(boolean mostrar) {
-        this.setVisible(mostrar);
+    public void setBtnsListener(ActionListener al) {
+        btnEscogerArchivo.addActionListener(al);
+    }
+    
+    /**
+     * Método para mostrar un panel específico de la aplicación.
+     * 
+     * @param nombre Identificador del panel a mostrar
+     */
+     public void mostrarPanel(String nombre){
+        cardLayout.show(contenedor, nombre);
     }
 }

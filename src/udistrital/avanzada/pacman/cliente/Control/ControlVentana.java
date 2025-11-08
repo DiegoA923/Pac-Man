@@ -4,7 +4,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import javax.swing.JFileChooser;
-import javax.swing.JTextField;
 import udistrital.avanzada.pacman.cliente.Vista.PanelJuego;
 import udistrital.avanzada.pacman.cliente.Vista.VentanaPrincipal;
 
@@ -18,7 +17,7 @@ import udistrital.avanzada.pacman.cliente.Vista.VentanaPrincipal;
  * @version 1.0
  * @since 2025-11-05
  */
-public class ControlVentana implements ActionListener, IVistaJuego {
+public class ControlVentana implements ActionListener {
 
     private ControlPrincipal logica;
     private VentanaPrincipal ventanaPrincipal;
@@ -28,17 +27,19 @@ public class ControlVentana implements ActionListener, IVistaJuego {
         this.logica = logica;
         this.panelJuego = new PanelJuego();
         panelJuego.addActionListenerTxtMovimiento(
-            new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    String texto = panelJuego.getTextMovimiento();
-                    if (!texto.isEmpty()) {
-                        //Llamar logica para enviar moviento
-                    }
+                new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String texto = panelJuego.getTextMovimiento();
+                if (!texto.isEmpty()) {
+                    //Llamar logica para enviar moviento
+                    logica.enviarMovimiento(texto);
                 }
             }
+        }
         );
         this.ventanaPrincipal = new VentanaPrincipal(panelJuego);
+        ventanaPrincipal.setBtnsListener(this);
     }
 
     /**
@@ -57,18 +58,48 @@ public class ControlVentana implements ActionListener, IVistaJuego {
     }
 
     /**
-     * Muestra un mensaje informativo.
+     * Muestra un mensaje informativo a usuario en una ventana emergente que
+     * bloquea a la pricipal
+     *
+     * @param titulo
+     * @param mensaje
      */
     public void mostrarMensajeInformativo(String titulo, String mensaje) {
         ventanaPrincipal.mostrarMensajeEmergente(titulo, mensaje);
     }
 
-    public void mostarVentana() {
-        ventanaPrincipal.mostrarVentana(true);
+    /**
+     * Metodo para mostrar panel para escoger archivo de configuracion
+     */
+    public void mostrarPanelArchivo() {
+        ventanaPrincipal.mostrarPanel("archivo");
+    }
+
+    /**
+     * Metodo para mostrar panel para jugar
+     */
+    public void mostrarPanelComando() {
+        ventanaPrincipal.mostrarPanel("juego");
+    }
+
+    /**
+     * Metodo para añadir resultado de juego y mostrarlo
+     *
+     * @param mensaje
+     */
+    public void agregarResultadoJuego(String mensaje) {
+        panelJuego.mostrarResultado(mensaje);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
+        String cmd = e.getActionCommand();
+        switch (cmd) {
+            case "archivo":
+                logica.precargaArchivo();
+                break;
+            default:
+                break;
+        }
     }
 }
