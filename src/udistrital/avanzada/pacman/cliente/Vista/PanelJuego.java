@@ -31,7 +31,7 @@ public class PanelJuego extends JPanel {
 
         add(panelSuperior, BorderLayout.NORTH);
 
-        areaTexto = new JTextArea(10, 30);
+        areaTexto = new JTextArea(10, 26);
         areaTexto.setEditable(false);
         areaTexto.setLineWrap(true);
         areaTexto.setWrapStyleWord(true);
@@ -57,7 +57,7 @@ public class PanelJuego extends JPanel {
      * @param texto
      */
     public void mostrarResultado(String texto) {
-        areaTexto.append(texto + "\n");
+        areaTexto.append("- "+texto + "\n");
         txtMovimiento.setText("");
     }
 
