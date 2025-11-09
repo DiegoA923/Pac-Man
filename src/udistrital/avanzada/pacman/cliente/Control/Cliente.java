@@ -2,6 +2,7 @@ package udistrital.avanzada.pacman.cliente.Control;
 
 import java.io.*;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Clase Cliente
@@ -64,8 +65,8 @@ public class Cliente {
      */
     public void enviarMensaje(String comando, String mensaje) throws IOException {
         if (socket != null && !socket.isClosed()) {
-            salida.writeUTF(comando);
-            salida.writeUTF(mensaje);
+            sendString(comando);
+            sendString(mensaje);
         }
     }
 
@@ -77,8 +78,17 @@ public class Cliente {
      */
     public void enviarMensajeString(String mensaje) throws IOException {
         if (socket != null && !socket.isClosed()) {
-            salida.writeUTF(mensaje);
+            sendString(mensaje);
         }
+    }
+
+    public void sendString(String msg) throws IOException {
+        byte[] data = msg != null ? msg.getBytes(StandardCharsets.UTF_8) : new byte[0];
+        salida.writeInt(data.length);  // primero la longitud
+        if (data.length > 0) {
+            salida.write(data);        // luego los bytes
+        }
+        salida.flush();               // asegura que se envíe al socket
     }
 
     /**
@@ -131,7 +141,7 @@ public class Cliente {
     public DataInputStream getEntrada() {
         return entrada;
     }
-    
+
     public String getIp() {
         return ip;
     }
