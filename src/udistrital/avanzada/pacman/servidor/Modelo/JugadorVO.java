@@ -1,4 +1,4 @@
-package udistrital.avanzada.pacman.Modelo;
+package udistrital.avanzada.pacman.servidor.Modelo;
 
 /**
  * Clase JugadorVO.
@@ -12,4 +12,4 @@ package udistrital.avanzada.pacman.Modelo;
  */
 public class JugadorVO {
 
-}
+    }
