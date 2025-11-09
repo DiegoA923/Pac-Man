@@ -83,12 +83,17 @@ public class Cliente {
     }
 
     public void sendString(String msg) throws IOException {
-        byte[] data = msg != null ? msg.getBytes(StandardCharsets.UTF_8) : new byte[0];
-        salida.writeInt(data.length);  // primero la longitud
-        if (data.length > 0) {
-            salida.write(data);        // luego los bytes
+        try {
+            byte[] data = msg != null ? msg.getBytes(StandardCharsets.UTF_8) : new byte[0];
+            salida.writeInt(data.length);  // primero la longitud
+            if (data.length > 0) {
+                salida.write(data);        // luego los bytes
+            }
+            salida.flush();               // asegura que se envíe al socket
+        } catch (Exception e) {
+            throw new IOException();
         }
-        salida.flush();               // asegura que se envíe al socket
+        
     }
 
     /**

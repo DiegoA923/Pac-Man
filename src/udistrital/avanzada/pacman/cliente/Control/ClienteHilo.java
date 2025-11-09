@@ -26,9 +26,7 @@ class ClienteHilo extends Thread {
 
     private String readMessage() throws IOException {
         try {
-            System.out.println("Esperando msg");
-            int len = entrada.readInt();              // lee la longitud
-            System.out.println(len+"hdoisd");
+            int len = entrada.readInt();              // lee la longitud            
             if (len == 0) {
                 return "";             // mensaje vacío
             }
@@ -36,7 +34,6 @@ class ClienteHilo extends Thread {
             entrada.readFully(data);                  // lee exactamente len bytes
             return new String(data, StandardCharsets.UTF_8);
         } catch (Exception e) {
-            System.out.println("fallo de conexion");
             throw new IOException();
         }
 
