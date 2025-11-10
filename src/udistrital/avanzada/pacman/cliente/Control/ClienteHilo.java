@@ -23,7 +23,13 @@ class ClienteHilo extends Thread {
         this.entrada = entrada;
         this.listener = listener;
     }
-
+    
+    /**
+     * Metodo custom para la lectura de mensajes del servidor de tipo string
+     * 
+     * @return el string del mensaje
+     * @throws IOException 
+     */
     private String readMessage() throws IOException {
         try {
             int len = entrada.readInt();              // lee la longitud            
@@ -51,16 +57,13 @@ class ClienteHilo extends Thread {
                 listener.procesarMensaje(opcion, mensaje);
             } catch (SocketException se) {
                 //La conexion se interrumpio por algun error de conexion
-                System.out.println("hola desconectado");
                 listener.procesarMensaje(Comando.CONEXION_INTERRUMPIDA.toString(), "Conexion cerro inesperadamente");
                 break;
             } catch (IOException e) {
                 //Conexion fue cerrada controladamente
-                System.out.println("hola desconectado co");
                 listener.procesarMensaje(Comando.CERRAR_CONEXION.toString(), "Cerrada conexion");
                 break;
             }
         }
-        System.out.println("salio del bucle");
     }
 }

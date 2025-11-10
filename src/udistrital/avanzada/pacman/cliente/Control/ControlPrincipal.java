@@ -129,12 +129,13 @@ public class ControlPrincipal implements MensajeListener {
                     break;
                 //cerrar conexion si no se ha cerrado correctamente    
                 case Comando.CERRAR_CONEXION:
-                    cVentana.mostrarMensajeInformativo("Info", mensaje);
+                    cVentana.agregarResultadoJuego(mensaje);
                     cCliente.cerrarConexion();
                     break;
                 //Si se cerro la conexion por algun error    
                 case Comando.CONEXION_INTERRUMPIDA:
                     cVentana.mostrarMensajeInformativo("Info", mensaje);
+                    //asegura cierre
                     cCliente.cerrarConexion();
                     break;
             }
