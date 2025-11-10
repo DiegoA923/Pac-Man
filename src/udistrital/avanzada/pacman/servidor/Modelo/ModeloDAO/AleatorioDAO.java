@@ -119,7 +119,7 @@ public class AleatorioDAO implements IAleatorioDAO {
             }
             JuegoVO mejor = juegos.get(0);
             for (JuegoVO juego : juegos) {
-                if (juego.getPuntaje() > mejor.getPuntaje() && juego.getTiempo() < mejor.getTiempo()) {
+                if (juego.getPuntaje()/juego.getTiempo() > mejor.getPuntaje()/mejor.getTiempo()) {
                     mejor = juego;
                 }
             }

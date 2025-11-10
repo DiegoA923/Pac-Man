@@ -3,6 +3,7 @@ package udistrital.avanzada.pacman.servidor.Control;
 import java.net.Socket;
 import java.util.ArrayList;
 import udistrital.avanzada.pacman.servidor.Modelo.JugadorVO;
+import udistrital.avanzada.pacman.servidor.Modelo.ModeloDAO.IAleatorioDAO;
 
 /**
  * Clase ControlServidorHilo
@@ -18,10 +19,12 @@ public class ControlServidorHilo implements ProcesadorPeticiones {
 
     private ArrayList<ServidorHilo> hilos;
     private ConexionListener cListener;
+    private IAleatorioDAO alDao;
 
-    public ControlServidorHilo(ConexionListener listener) {
+    public ControlServidorHilo(ConexionListener listener, IAleatorioDAO alDao) {
         this.cListener = listener;
         this.hilos = new ArrayList<>();
+        this.alDao = alDao;
     }
 
     /**
@@ -74,6 +77,7 @@ public class ControlServidorHilo implements ProcesadorPeticiones {
      */
     @Override
     public synchronized void terminarJuego(String nombre, int puntaje, double tiempoTotal, ServidorHilo hilo) {
+        alDao.insertarJuego(nombre, puntaje, tiempoTotal);
         //Guardar en el el archivo serializado        
     }
 }

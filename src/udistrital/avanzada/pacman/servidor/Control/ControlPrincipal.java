@@ -3,6 +3,7 @@ package udistrital.avanzada.pacman.servidor.Control;
 import java.io.File;
 import udistrital.avanzada.pacman.servidor.Modelo.ModeloConexion.ConexionAleatorio;
 import udistrital.avanzada.pacman.servidor.Modelo.ModeloDAO.AleatorioDAO;
+import udistrital.avanzada.pacman.servidor.Modelo.ModeloDAO.IAleatorioDAO;
 
 /**
  * Clase ControlPrincipal.
@@ -20,12 +21,15 @@ public class ControlPrincipal implements ConexionListener {
     private ControlVentana cVentana;
     private ControlServidorHilo cServidorHilo;
     private Servidor servidor;
+    private IAleatorioDAO alDao;
 
     public ControlPrincipal() {
         //this.propsDAO = new PropertiesDAO();
         this.cVentana = new ControlVentana(this); 
-        this.cServidorHilo = new ControlServidorHilo(this);
+        this.alDao = new AleatorioDAO(new ConexionAleatorio());
+        this.cServidorHilo = new ControlServidorHilo(this, alDao);
         this.servidor = new  Servidor(cServidorHilo);   
+        
         preCarga();
     }
 
@@ -40,6 +44,8 @@ public class ControlPrincipal implements ConexionListener {
         }       
         //Obtener ruta de archivo
         String ruta = archivoPropiedades.getAbsolutePath();  
+        //ruta debe venir de archivo propiedades
+        alDao.setArchivoAleatorio("specs/data/juegos.txt");
         
         int puerto = 5000;
         servidor.config(puerto);
@@ -48,7 +54,10 @@ public class ControlPrincipal implements ConexionListener {
             return;
         }
         cVentana.mostrarMensajeConsola("escuchando en puerto: "+ puerto);
-        servidor.start();        
+        servidor.start();
+        
+        
+                
         //Despues de asegurar la conexion a BD y levantamiento del servidor mostrar ventana
         //Se hace necesario para poder cerrar el servidor cuando esta activo por primera vez y nadie
         //se va a conectar
@@ -131,10 +140,8 @@ public class ControlPrincipal implements ConexionListener {
      * Metodo para salir de la aplicacion de manera controlada
      */
     public void salir() {    
-        //Mostrar Mejor Jugador ejemplo        
-        AleatorioDAO d = new AleatorioDAO(new ConexionAleatorio());
-        d.setArchivoAleatorio("specs/data/juegos.txt");
-        String[] mejor = d.getMejorJuego();
+        //Mostrar Mejor Jugador ejemplo                
+        String[] mejor = alDao.getMejorJuego();
         if (mejor == null) {
             cVentana.mostrarMensajeEmergente("INFO","Error al conectar archivo aleatorio");
         } else if (mejor.length == 0) {
