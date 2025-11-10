@@ -15,4 +15,5 @@ import java.io.RandomAccessFile;
 public interface IConexionAleatorio {
     public RandomAccessFile conectar();
     public void desconectar();
+    public void setRuta(String ruta);
 }

@@ -55,6 +55,7 @@ public class ConexionAleatorio implements IConexionAleatorio {
      *
      * @param ruta
      */
+    @Override
     public void setRuta(String ruta) {
         this.ruta = ruta;
     }
