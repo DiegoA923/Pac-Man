@@ -23,7 +23,7 @@ public class PanelJuego extends JPanel {
     public PanelJuego() {
 
         JPanel panelSuperior = new JPanel(new BorderLayout(5, 5));
-        lblMovimiento = new JLabel("Ingrese movimiento(arriba, abajo, izquierda, derecha):");
+        lblMovimiento = new JLabel("Ingrese movimiento(arriba, abajo, izquierda, derecha,f(acabar)):");
         txtMovimiento = new JTextField();
 
         panelSuperior.add(lblMovimiento, BorderLayout.NORTH);
