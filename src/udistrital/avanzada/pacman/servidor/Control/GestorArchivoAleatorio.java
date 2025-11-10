@@ -1,15 +1,6 @@
 package udistrital.avanzada.pacman.servidor.Control;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
-import javax.swing.JFileChooser;
-import udistrital.avanzada.pacman.servidor.Modelo.Conexion.ConexionProperties;
-import udistrital.avanzada.pacman.servidor.Modelo.Conexion.IConexionProperties;
-import udistrital.avanzada.pacman.servidor.Modelo.JugadorVO;
+import udistrital.avanzada.pacman.servidor.Modelo.DAO.IAleatorioDAO;
 
 /**
  * GestorArchivoAleatorio
@@ -30,22 +21,10 @@ public class GestorArchivoProperties {
         this.dao = dao;
     }
 
-    /**
-     * Carga directamente un archivo de propiedades sin abrir el JFileChooser.
-     * 
-     * @param archivo archivo de propiedades a cargar
-     * @return true si se cargó correctamente, false si hubo un error
-     */
     public void insertarJuego(String nombre, int puntaje, double tiempo) {
         dao.insertarJuego(nombre, puntaje, tiempo);
     }
 
-    /**
-     * Carga directamente un archivo de propiedades sin abrir el JFileChooser.
-     * 
-     * @param archivo archivo de propiedades a cargar
-     * @return true si se cargó correctamente, false si hubo un error
-     */
     public String[] obtenerMejorJugador() {
         return dao.getMejorJuego();
     }
