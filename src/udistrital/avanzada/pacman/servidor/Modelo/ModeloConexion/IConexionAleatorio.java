@@ -1,5 +1,7 @@
 package udistrital.avanzada.pacman.servidor.Modelo.ModeloConexion;
 
+import java.io.RandomAccessFile;
+
 /**
  * Clase IConexionAleatorio.
  * <p>
@@ -11,5 +13,6 @@ package udistrital.avanzada.pacman.servidor.Modelo.ModeloConexion;
  * @since 2025-11-05
  */
 public interface IConexionAleatorio {
-
+    public RandomAccessFile conectar();
+    public void desconectar();
 }
