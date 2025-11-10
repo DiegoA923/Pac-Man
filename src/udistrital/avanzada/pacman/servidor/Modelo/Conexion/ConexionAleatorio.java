@@ -1,4 +1,4 @@
-package udistrital.avanzada.pacman.servidor.Modelo.ModeloConexion;
+package udistrital.avanzada.pacman.servidor.Modelo.Conexion;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
