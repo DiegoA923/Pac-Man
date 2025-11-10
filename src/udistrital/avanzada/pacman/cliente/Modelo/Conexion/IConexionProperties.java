@@ -1,9 +1,13 @@
-package udistrital.avanzada.pacman.cliente.modelo.Conexion;
+package udistrital.avanzada.pacman.cliente.Modelo.Conexion;
+
+import java.util.Properties;
 
 /**
  * Clase IConexionProperties.
  * <p>
- * Descripción:
+ * Define el contrato para las clases encargadas de gestionar la lectura 
+ * del archivo de propiedades.
+ * Garantiza un acceso centralizado y controlado al recurso del archivo properties.
  * </p>
  *
  * @author Mauricio
@@ -12,4 +16,28 @@ package udistrital.avanzada.pacman.cliente.modelo.Conexion;
  */
 public interface IConexionProperties {
 
+    /**
+     * Establecer conexion
+     *
+     * @return Properties
+     */
+    public Properties conectar();
+
+    /**
+     * Cerrar la conexion
+     */
+    public void desconectar();
+
+    /**
+     * Establece la ruta del archivo de propiedades.
+     *
+     * @param rutaArchivo nueva ruta del archivo
+     */
+    public void setRutaArchivo(String rutaArchivo);
+    
+    /**
+     * Obtener ruta configurada
+     * @return 
+     */
+    public String getRutaArchivo();
 }

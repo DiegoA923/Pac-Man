@@ -2,6 +2,7 @@ package udistrital.avanzada.pacman.servidor.Modelo;
 
 import java.io.Serializable;
 
+
 /**
  * JugadorVO
  * <p>
@@ -20,7 +21,7 @@ import java.io.Serializable;
  * @since 2025-11-08
  */
 public class JugadorVO implements Serializable {
-
+    
     private int id;
     private String usuario;
     private String password;
@@ -123,3 +124,4 @@ public class JugadorVO implements Serializable {
         return "JugadorVO{" + "id=" + id + ", Usuario ='" + usuario + '\'' + '}';
     }
 }
+

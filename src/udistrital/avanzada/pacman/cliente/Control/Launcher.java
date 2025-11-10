@@ -1,4 +1,4 @@
-package udistrital.avanzada.pacman.cliente.control;
+package udistrital.avanzada.pacman.cliente.Control;
 
 /**
  * Clase Launcher.
