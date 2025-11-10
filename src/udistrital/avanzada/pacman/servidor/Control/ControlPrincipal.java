@@ -1,16 +1,6 @@
 package udistrital.avanzada.pacman.servidor.Control;
 
-import java.io.BufferedReader;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.util.TimerTask;
-import java.util.Timer;
-import udistrital.avanzada.pacman.cliente.Modelo.DAO.PropertiesDAO;
 
 /**
  * Clase ControlPrincipal.
@@ -22,15 +12,19 @@ import udistrital.avanzada.pacman.cliente.Modelo.DAO.PropertiesDAO;
  * @version 1.0
  * @since 2025-11-05
  */
-public class ControlPrincipal {
+public class ControlPrincipal implements ConexionListener {
 
     //private PropertiesDAO propsDAO;
     private ControlVentana cVentana;
-    private DataOutputStream out;
+    private ControlServidorHilo cServidorHilo;
+    private Servidor servidor;
 
     public ControlPrincipal() {
         //this.propsDAO = new PropertiesDAO();
-        this.cVentana = new ControlVentana(this);        
+        this.cVentana = new ControlVentana(this); 
+        this.cServidorHilo = new ControlServidorHilo(this);
+        this.servidor = new  Servidor(cServidorHilo);   
+        preCarga();
     }
 
     public void preCarga() {
@@ -41,9 +35,25 @@ public class ControlPrincipal {
         //No escogio archivo retornar
         if (archivoPropiedades == null) {
             return;
-        }
+        }       
         //Obtener ruta de archivo
-        String ruta = archivoPropiedades.getAbsolutePath();
+        String ruta = archivoPropiedades.getAbsolutePath();  
+        
+        int puerto = 5000;
+        servidor.config(puerto);
+        if (!servidor.levantarServidor()) {
+            cVentana.mostrarMensajeEmergente("Info", "Puerto "+puerto+" ya usado");
+            return;
+        }
+        cVentana.mostrarMensajeConsola("escuchando en puerto: "+ puerto);
+        servidor.start();        
+        //Despues de asegurar la conexion a BD y levantamiento del servidor mostrar ventana
+        //Se hace necesario para poder cerrar el servidor cuando esta activo por primera vez y nadie
+        //se va a conectar
+        //Otro modo es por medio de consola preguntar si acabar servidor
+        cVentana.mostrarVentana(true);
+        cVentana.mostrarBtnSalir(true);
+        //-------------------------
         //Asignar ruta a DAOs props y DAO jugador
 //        propsDAO.setConfiguracionConexion(ruta);
 //
@@ -99,5 +109,32 @@ public class ControlPrincipal {
 //        }
 
     }
-
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onConexion(int cantidad) {
+       if (cantidad == 0) {         
+         //mostrar ventana cuando hay 0 conectados al servidor
+         cVentana.mostrarVentana(true);
+       } else {
+         //ocultar ventana cuando hay mas de 1 persona conectada al servidor
+         cVentana.mostrarVentana(false);
+       }
+       cVentana.mostrarMensajelbl("Conectados: "+cantidad);
+    }
+    
+    /**
+     * Metodo para salir de la aplicacion de manera controlada
+     */
+    public void salir() {    
+        //Mostrar Mejor Jugador
+        cVentana.mostrarMensajeEmergente("Ganador","El mejor es nombre");
+        cVentana.mostrarMensajeConsola("El mejor es nombre");
+        //Cerrar conexiones activas
+        servidor.cerrarServidor();
+        //Cerrar servidor levantado
+        cServidorHilo.cerrarConexiones();               
+    }
 }
