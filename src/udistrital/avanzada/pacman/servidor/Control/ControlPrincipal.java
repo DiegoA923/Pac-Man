@@ -1,6 +1,8 @@
 package udistrital.avanzada.pacman.servidor.Control;
 
 import java.io.File;
+import udistrital.avanzada.pacman.servidor.Modelo.ModeloConexion.ConexionAleatorio;
+import udistrital.avanzada.pacman.servidor.Modelo.ModeloDAO.AleatorioDAO;
 
 /**
  * Clase ControlPrincipal.
@@ -129,9 +131,22 @@ public class ControlPrincipal implements ConexionListener {
      * Metodo para salir de la aplicacion de manera controlada
      */
     public void salir() {    
-        //Mostrar Mejor Jugador
-        cVentana.mostrarMensajeEmergente("Ganador","El mejor es nombre");
-        cVentana.mostrarMensajeConsola("El mejor es nombre");
+        //Mostrar Mejor Jugador ejemplo        
+        AleatorioDAO d = new AleatorioDAO(new ConexionAleatorio());
+        d.setArchivoAleatorio("specs/data/juegos.txt");
+        String[] mejor = d.getMejorJuego();
+        if (mejor == null) {
+            cVentana.mostrarMensajeEmergente("INFO","Error al conectar archivo aleatorio");
+        } else if (mejor.length == 0) {
+            cVentana.mostrarMensajeEmergente("Ganador","No hay registros aun");            
+        } else {
+            cVentana.mostrarMensajeEmergente(
+                    "Ganador",
+                    "El mejor es "+mejor[0]+" con "+ mejor[1]+" puntos en "+mejor[2]+" segundos"
+            );
+            cVentana.mostrarMensajeConsola("El mejor es nombre");
+        }
+                
         //Cerrar conexiones activas
         servidor.cerrarServidor();
         //Cerrar servidor levantado
