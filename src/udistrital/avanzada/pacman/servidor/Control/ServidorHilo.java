@@ -153,10 +153,17 @@ public class ServidorHilo extends Thread {
                         }
                         if (acabo) {
                             end = System.nanoTime();
-                            double duracionSegundos = (end - start) / 1_000_000_000.0;
-                            escribirMensajeString("FIN_JUEGO");
-                            escribirMensajeString("Gano en " + duracionSegundos + "segundos");
-                            procesador.terminarJuego("nombre"+new Random().nextInt(100), new Random().nextInt(100), duracionSegundos, this);
+                            double duracionSegundos = (end - start) / 1_000_000_000.0;                            
+                            int puntaje = new Random().nextInt(100);
+                            String nombre = "nombre"+new Random().nextInt(100);
+                            escribirMensajeString("FIN_JUEGO");                            
+                            escribirMensajeString(
+                                    nombre+
+                                    " finalizo con "
+                                    +puntaje +
+                                    " puntos en "
+                                    + duracionSegundos + "segundos");                            
+                            procesador.terminarJuego(nombre, puntaje, duracionSegundos, this);
                         } else {
                             escribirMensajeString("RESULTADO_MOVIMIENTO");
                             escribirMensajeString("Movido a la " + movimiento);
