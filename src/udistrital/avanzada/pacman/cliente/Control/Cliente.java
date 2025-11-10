@@ -81,7 +81,12 @@ public class Cliente {
             sendString(mensaje);
         }
     }
-
+    /**
+     * Metodo para enviar mensaje personalilzado
+     *
+     * @param msg informacin a enviar
+     * @throws IOException
+     */
     public void sendString(String msg) throws IOException {
         try {
             byte[] data = msg != null ? msg.getBytes(StandardCharsets.UTF_8) : new byte[0];
