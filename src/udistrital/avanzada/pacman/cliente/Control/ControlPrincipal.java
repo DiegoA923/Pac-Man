@@ -96,7 +96,7 @@ public class ControlPrincipal implements MensajeListener {
      * {@inheritDoc}
      */
     @Override
-    public void procesarMensaje(String tipo, String mensaje) {
+    public synchronized void procesarMensaje(String tipo, String mensaje) {
         try {
             Comando cmd = Comando.valueOf(tipo.toUpperCase());
             switch (cmd) {
@@ -129,11 +129,13 @@ public class ControlPrincipal implements MensajeListener {
                     break;
                 //cerrar conexion si no se ha cerrado correctamente    
                 case Comando.CERRAR_CONEXION:
+                    cVentana.agregarResultadoJuego(mensaje);
                     cCliente.cerrarConexion();
                     break;
                 //Si se cerro la conexion por algun error    
                 case Comando.CONEXION_INTERRUMPIDA:
                     cVentana.mostrarMensajeInformativo("Info", mensaje);
+                    //asegura cierre
                     cCliente.cerrarConexion();
                     break;
             }

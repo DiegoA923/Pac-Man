@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package udistrital.avanzada.pacman.servidor.Vista;
 
 /**
@@ -14,6 +10,38 @@ package udistrital.avanzada.pacman.servidor.Vista;
  * @version 1.0
  * @since 2025-11-05
  */
-public class VentanaJuego {
+import javax.swing.*;
+import java.awt.*;
 
+public class VentanaJuego extends JFrame {
+    
+    private final int FILAS = 11;
+    private final int COLUMNAS = 11;
+    
+    public VentanaJuego() {
+        super("Ventana Juego");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(500, 500);        
+        setLocationRelativeTo(null);
+        setResizable(false);
+        // Panel principal con GridLayout
+        JPanel panelTablero = new JPanel();
+        panelTablero.setLayout(new GridLayout(FILAS, COLUMNAS));
+        
+        // Crear celdas
+        for (int fila = 0; fila < FILAS; fila++) {
+            for (int col = 0; col < COLUMNAS; col++) {
+                JPanel celda = new JPanel();
+                celda.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+
+                // Alternar colores (opcional)
+                celda.setBackground(Color.WHITE);                
+
+                panelTablero.add(celda);
+            }
+        }
+
+        add(panelTablero);
+        setVisible(true);
+    }
 }

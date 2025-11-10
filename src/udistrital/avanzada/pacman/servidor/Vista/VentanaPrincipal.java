@@ -1,5 +1,7 @@
 package udistrital.avanzada.pacman.servidor.Vista;
 
+import java.awt.*;
+import java.awt.event.ActionListener;
 import java.io.File;
 import javax.swing.*;
 import javax.swing.filechooser.*;
@@ -15,6 +17,41 @@ import javax.swing.filechooser.*;
  * @since 2025-11-05
  */
 public class VentanaPrincipal extends JFrame {
+
+    private final JLabel lblMensaje;
+    private final JButton btnSalir;
+    private final JPanel Contenedor;
+
+    public VentanaPrincipal() {
+        super("Servidor Pac-Man");
+        // Configuración base de la ventana
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setSize(400, 300);
+        setLocationRelativeTo(null);
+        setResizable(false);
+        Contenedor = new JPanel();
+        Contenedor.setLayout(new BoxLayout(Contenedor, BoxLayout.Y_AXIS));
+
+        Contenedor.setAlignmentX(Component.CENTER_ALIGNMENT);
+        Contenedor.setAlignmentY(Component.CENTER_ALIGNMENT);
+
+        lblMensaje = new JLabel("Conectados: 0");
+        lblMensaje.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        btnSalir = new JButton("Salir");
+        btnSalir.setActionCommand("salir");
+        btnSalir.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        Contenedor.add(Box.createVerticalGlue());
+        Contenedor.add(lblMensaje);
+        Contenedor.add(Box.createVerticalStrut(10));
+        Contenedor.add(btnSalir);
+        Contenedor.add(Box.createVerticalGlue());
+
+        add(Contenedor, BorderLayout.CENTER);
+        setVisible(false);
+    }
+
     /**
      * Muestra una ventana de selección de archivos configurada para escoger
      * archivos .properties de configuración del torneo.
@@ -35,7 +72,7 @@ public class VentanaPrincipal extends JFrame {
         fileChooser.setFileSelectionMode(modoSeleccion);
         return fileChooser;
     }
-    
+
     /**
      * Muestra un mensaje emergente informativo.
      *
@@ -50,7 +87,7 @@ public class VentanaPrincipal extends JFrame {
                 JOptionPane.INFORMATION_MESSAGE
         );
     }
-    
+
     /**
      * Muestra mensaje en consola.
      *
@@ -58,5 +95,41 @@ public class VentanaPrincipal extends JFrame {
      */
     public void mostrarMensajeConsola(String mensaje) {
         System.out.println(mensaje);
+    }
+
+    /**
+     * Metodo para mostrar la ventana principal
+     *
+     * @param bandera
+     */
+    public void mostrarVentana(boolean bandera) {
+        setVisible(bandera);
+    }
+
+    /**
+     * Configurar action listener de los botones
+     *
+     * @param al objeto que escuchara
+     */
+    public void setBtnsListener(ActionListener al) {
+        btnSalir.addActionListener(al);
+    }
+
+    /**
+     * habilitar/deshabilitar boton salir
+     *
+     * @param bandera
+     */
+    public void setEnableBtnSalir(boolean bandera) {
+        btnSalir.setEnabled(bandera);
+    }
+
+    /**
+     * Cambiar texto de mensaje en la ventana
+     *
+     * @param text
+     */
+    public void setTextMensajeLbl(String text) {
+        lblMensaje.setText(text);
     }
 }

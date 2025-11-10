@@ -2,13 +2,14 @@ package udistrital.avanzada.pacman.cliente.Control;
 
 import java.io.*;
 import java.net.SocketException;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Clase ClienteHilo
- * 
- * Maneja la captura de los mensajes que envia el servidor
- * hereda de Thread para no bloquear el hilo principal
- * 
+ *
+ * Maneja la captura de los mensajes que envia el servidor hereda de Thread para
+ * no bloquear el hilo principal
+ *
  * @author Mauricio
  * @version 1.0
  * @since 2025-11-07
@@ -22,6 +23,27 @@ class ClienteHilo extends Thread {
         this.entrada = entrada;
         this.listener = listener;
     }
+    
+    /**
+     * Metodo custom para la lectura de mensajes del servidor de tipo string
+     * 
+     * @return el string del mensaje
+     * @throws IOException 
+     */
+    private String readMessage() throws IOException {
+        try {
+            int len = entrada.readInt();              // lee la longitud            
+            if (len == 0) {
+                return "";             // mensaje vacío
+            }
+            byte[] data = new byte[len];
+            entrada.readFully(data);                  // lee exactamente len bytes
+            return new String(data, StandardCharsets.UTF_8);
+        } catch (Exception e) {
+            throw new IOException();
+        }
+
+    }
 
     public void run() {
         String mensaje = "";
@@ -29,17 +51,17 @@ class ClienteHilo extends Thread {
         while (true) {
             try {
                 // leer que quiere que hagamos el servidor
-                opcion = entrada.readUTF();
+                opcion = readMessage();
                 // leer mensaje con resultado o descripcion
-                mensaje = entrada.readUTF();
+                mensaje = readMessage();
                 listener.procesarMensaje(opcion, mensaje);
             } catch (SocketException se) {
                 //La conexion se interrumpio por algun error de conexion
-                listener.procesarMensaje(Comando.CONEXION_INTERRUMPIDA.name(), "Conexion cerro inesperadamente");
+                listener.procesarMensaje(Comando.CONEXION_INTERRUMPIDA.toString(), "Conexion cerro inesperadamente");
                 break;
             } catch (IOException e) {
                 //Conexion fue cerrada controladamente
-                listener.procesarMensaje(Comando.CERRAR_CONEXION.name(), "Cerra conexion");
+                listener.procesarMensaje(Comando.CERRAR_CONEXION.toString(), "Cerrada conexion");
                 break;
             }
         }
