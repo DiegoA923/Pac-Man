@@ -2,8 +2,6 @@ package udistrital.avanzada.pacman.servidor.Control;
 
 import java.io.File;
 import udistrital.avanzada.pacman.servidor.Modelo.Conexion.ConexionAleatorio;
-import udistrital.avanzada.pacman.servidor.Modelo.DAO.AleatorioDAO;
-import udistrital.avanzada.pacman.servidor.Modelo.DAO.IAleatorioDAO;
 
 /**
  * Clase ControlPrincipal.
@@ -21,15 +19,14 @@ public class ControlPrincipal implements ConexionListener {
     private ControlVentana cVentana;
     private ControlServidorHilo cServidorHilo;
     private Servidor servidor;
-    private IAleatorioDAO alDao;
+    private GestorArchivoAleatorio gAleatorio;
 
     public ControlPrincipal() {
         //this.propsDAO = new PropertiesDAO();
         this.cVentana = new ControlVentana(this); 
-        this.alDao = new AleatorioDAO(new ConexionAleatorio());
-        this.cServidorHilo = new ControlServidorHilo(this, alDao);
+        this.gAleatorio = new GestorArchivoAleatorio(new ConexionAleatorio());
+        this.cServidorHilo = new ControlServidorHilo(this, gAleatorio);
         this.servidor = new  Servidor(cServidorHilo);   
-        
         preCarga();
     }
 
@@ -45,7 +42,8 @@ public class ControlPrincipal implements ConexionListener {
         //Obtener ruta de archivo
         String ruta = archivoPropiedades.getAbsolutePath();  
         //ruta debe venir de archivo propiedades
-        alDao.setArchivoAleatorio("specs/data/juegos.txt");
+        gAleatorio.setArchivoAleatorio("specs/data/juegos.txt");
+        
         
         int puerto = 5000;
         servidor.config(puerto);
@@ -141,7 +139,7 @@ public class ControlPrincipal implements ConexionListener {
      */
     public void salir() {    
         //Mostrar Mejor Jugador ejemplo                
-        String[] mejor = alDao.getMejorJuego();
+        String[] mejor = gAleatorio.getMejorJuego();
         if (mejor == null) {
             cVentana.mostrarMensajeEmergente("INFO","Error al conectar archivo aleatorio");
         } else if (mejor.length == 0) {

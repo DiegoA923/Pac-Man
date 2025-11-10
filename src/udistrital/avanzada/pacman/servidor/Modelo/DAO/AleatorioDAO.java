@@ -3,7 +3,6 @@ package udistrital.avanzada.pacman.servidor.Modelo.DAO;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
-import udistrital.avanzada.pacman.servidor.Modelo.JuegoVO;
 import udistrital.avanzada.pacman.servidor.Modelo.Conexion.IConexionAleatorio;
 
 /**
@@ -83,7 +82,7 @@ public class AleatorioDAO implements IAleatorioDAO {
     }
 
     @Override
-    public ArrayList<JuegoVO> getJuegos() {
+    private String[] getMejorJuego() {
         RandomAccessFile raf = conexion.conectar();
         int cantidadReg = 0;
         try {
@@ -91,18 +90,33 @@ public class AleatorioDAO implements IAleatorioDAO {
         } catch (IOException ex) {
 
         }
-        ArrayList<JuegoVO> juegos = new ArrayList<>();
+        if (cantidadReg) {
+            return null;
+        }
         try {
             //Nos posicionamos en el primer registro
             raf.seek(0);
             //Leemos cada uno y lo agregamos a la lista            
-            while (raf.getFilePointer() < raf.length()) {
-                String nombre = leerCadena(raf, NOMBRE_LEN).trim();
-                int puntaje = raf.readInt();
-                double tiempo = raf.readDouble();
-                juegos.add(new JuegoVO(nombre, puntaje, tiempo));
+            String nombreMejor = "";
+            int puntajeMejor = 0;
+            double tiempoMejor = 10000000;
+            for(int i = 0; i < cantidadReg; i++) {
+                if(raf.getFilePointer() < raf.length()) {
+                    String nombre = leerCadena(raf, NOMBRE_LEN).trim();
+                    int puntaje = raf.readInt();
+                    double tiempo = raf.readDouble();
+                    if (puntaje/tiempo > puntajeMejor/tiempoMejor) {
+                        nombreMejor = nombre;
+                        puntajeMejor = puntaje;
+                        tiempoMejor = tiempoMejor;
+                    }
+                }
             }
-            return juegos;
+            return new String[] {
+                nombreMejor,
+                String.valueOf(puntajeMejor),
+                String.valueOf(tiempoMejor)
+            };
         } catch (IOException ex) {
             throw new RuntimeException("Error al leer " + ex.getMessage(), ex);
         } finally {
@@ -111,28 +125,14 @@ public class AleatorioDAO implements IAleatorioDAO {
     }
 
     @Override
-    public String[] getMejorJuego() {
+    public boolean conexionValida() {
         try {
-            ArrayList<JuegoVO> juegos = getJuegos();
-            if (juegos == null || juegos.isEmpty()) {
-                return new String[0];
-            }
-            JuegoVO mejor = juegos.get(0);
-            for (JuegoVO juego : juegos) {
-                //ver todos en consola para pruebas
-                System.out.println(juego.getNombre()+" "+juego.getPuntaje()+" "+ juego.getTiempo());
-                if (juego.getPuntaje()/juego.getTiempo() > mejor.getPuntaje()/mejor.getTiempo()) {
-                    mejor = juego;
-                }
-            }
-            String[] datos = new String[3];
-            datos[0] = mejor.getNombre();
-            datos[1] = String.valueOf(mejor.getPuntaje());
-            datos[2] = String.valueOf(mejor.getTiempo());
-            return datos;
-        } catch (Exception e) {
-            return null;
+            conexion.conectar();
+            return true;
+        } catch (RuntimeException ex) {
+            return false;
+        } finally {
+            conexion.desconectar();
         }
-
     }
 }
