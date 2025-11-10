@@ -1,9 +1,9 @@
 package udistrital.avanzada.pacman.servidor.Control;
 
 import java.io.File;
-import udistrital.avanzada.pacman.servidor.Modelo.ModeloConexion.ConexionAleatorio;
-import udistrital.avanzada.pacman.servidor.Modelo.ModeloDAO.AleatorioDAO;
-import udistrital.avanzada.pacman.servidor.Modelo.ModeloDAO.IAleatorioDAO;
+import udistrital.avanzada.pacman.servidor.Modelo.Conexion.ConexionAleatorio;
+import udistrital.avanzada.pacman.servidor.Modelo.DAO.AleatorioDAO;
+import udistrital.avanzada.pacman.servidor.Modelo.DAO.IAleatorioDAO;
 
 /**
  * Clase ControlPrincipal.

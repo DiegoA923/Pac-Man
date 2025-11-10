@@ -2,6 +2,7 @@ package udistrital.avanzada.pacman.cliente.Control;
 
 import java.io.File;
 import java.io.IOException;
+import javax.swing.SwingUtilities;
 import udistrital.avanzada.pacman.cliente.Modelo.DAO.JugadorPropertiesDAO;
 import udistrital.avanzada.pacman.cliente.Modelo.DAO.PropertiesDAO;
 
@@ -102,11 +103,11 @@ public class ControlPrincipal implements MensajeListener {
             switch (cmd) {
                 //Resultado de movimiento
                 case Comando.RESULTADO_MOVIMIENTO:
-                    cVentana.agregarResultadoJuego(mensaje);
+                    SwingUtilities.invokeLater(() -> cVentana.agregarResultadoJuego(mensaje));
                     break;
                 //Fin juego
                 case Comando.FIN_JUEGO:
-                    cVentana.agregarResultadoJuego(mensaje);
+                    SwingUtilities.invokeLater(() -> cVentana.agregarResultadoJuego(mensaje));
                     cCliente.cerrarConexion();
                     break;
 
@@ -120,7 +121,7 @@ public class ControlPrincipal implements MensajeListener {
                 case Comando.RESULTADO_AUTENTIFICACION:
                     if (mensaje.equalsIgnoreCase("exito")) {
                         //Si autentificacion exitosa mostrar ventana para jugar    
-                        cVentana.mostrarPanelComando();
+                        SwingUtilities.invokeLater(() -> cVentana.mostrarPanelComando());
                     } else {
                         //Si no mostra que hubo error
                         cVentana.mostrarMensajeInformativo("Info", "Autentificacion fallida");
@@ -129,12 +130,12 @@ public class ControlPrincipal implements MensajeListener {
                     break;
                 //cerrar conexion si no se ha cerrado correctamente    
                 case Comando.CERRAR_CONEXION:
-                    cVentana.agregarResultadoJuego(mensaje);
+                    SwingUtilities.invokeLater(() -> cVentana.agregarResultadoJuego(mensaje));
                     cCliente.cerrarConexion();
                     break;
                 //Si se cerro la conexion por algun error    
                 case Comando.CONEXION_INTERRUMPIDA:
-                    cVentana.mostrarMensajeInformativo("Info", mensaje);
+                    SwingUtilities.invokeLater(() -> cVentana.mostrarMensajeInformativo("Info", mensaje));
                     //asegura cierre
                     cCliente.cerrarConexion();
                     break;

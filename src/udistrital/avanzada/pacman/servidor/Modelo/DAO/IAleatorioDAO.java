@@ -1,4 +1,4 @@
-package udistrital.avanzada.pacman.servidor.Modelo.ModeloDAO;
+package udistrital.avanzada.pacman.servidor.Modelo.DAO;
 
 import java.util.ArrayList;
 import udistrital.avanzada.pacman.servidor.Modelo.JuegoVO;

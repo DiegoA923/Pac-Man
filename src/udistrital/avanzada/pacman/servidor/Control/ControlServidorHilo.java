@@ -3,7 +3,7 @@ package udistrital.avanzada.pacman.servidor.Control;
 import java.net.Socket;
 import java.util.ArrayList;
 import udistrital.avanzada.pacman.servidor.Modelo.JugadorVO;
-import udistrital.avanzada.pacman.servidor.Modelo.ModeloDAO.IAleatorioDAO;
+import udistrital.avanzada.pacman.servidor.Modelo.DAO.IAleatorioDAO;
 
 /**
  * Clase ControlServidorHilo
@@ -32,7 +32,7 @@ public class ControlServidorHilo implements ProcesadorPeticiones {
      *
      * @param so conexion a agregar
      */
-    public void agregarConexion(Socket so) {
+    public synchronized void agregarConexion(Socket so) {
         //Inyectamos el procesador de peticiones del cliente
         ServidorHilo hilo = new ServidorHilo(so, this);
         hilos.add(hilo);

@@ -1,10 +1,10 @@
-package udistrital.avanzada.pacman.servidor.Modelo.ModeloDAO;
+package udistrital.avanzada.pacman.servidor.Modelo.DAO;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import udistrital.avanzada.pacman.servidor.Modelo.JuegoVO;
-import udistrital.avanzada.pacman.servidor.Modelo.ModeloConexion.IConexionAleatorio;
+import udistrital.avanzada.pacman.servidor.Modelo.Conexion.IConexionAleatorio;
 
 /**
  * Clase DAO
