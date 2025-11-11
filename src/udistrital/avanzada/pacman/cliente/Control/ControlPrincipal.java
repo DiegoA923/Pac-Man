@@ -114,6 +114,7 @@ public class ControlPrincipal implements MensajeListener {
                 //Enviar datos de cliente para autentificar si es solicitado por el servidor
                 case Comando.AUTENTIFICACION:
                     String[] datosJugador = cJugador.getDatosJugador();
+                    cCliente.enviarMensajeString("AUTENTIFICACION");
                     cCliente.enviarMensajeString(datosJugador[0]);
                     cCliente.enviarMensajeString(datosJugador[1]);
                     break;

@@ -41,30 +41,9 @@ public class ServidorHilo extends Thread {
      * Solicita la autentificacion del cliente para saber si iniciar el juego o
      * terminar la conexion
      */
-    public void preguntarAutentificacion() {
-        try {
-            escribirMensajeString("Autentificacion");
-            escribirMensajeString("Ingrese usuario y contraseña");
-            String usuario = LeerMensajeString();
-            String password = LeerMensajeString();
-            System.out.println(usuario + " " + password);
-            //Llamar a procesador para saber si cliente existe
-            jugador = procesador.autentificarUsuario(usuario, password);
-            // si la respuesta es null entonces jugador no existe en BD
-            if (jugador == null) {
-                //El procesador se encarge de la eliminacion de esta conexion
-                procesador.eliminarConexion(this);
-            } else {
-                //Enviar mensaje de exito para que pueda iniciar juego
-                escribirMensajeString("RESULTADO_AUTENTIFICACION");
-                escribirMensajeString("exito");
-                //Iniciar conometro de juego
-                start = System.nanoTime();
-            }
-        } catch (IOException ex) {
-
-        }
-
+    public void preguntarAutentificacion() throws IOException {        
+        escribirMensajeString("Autentificacion");
+        escribirMensajeString("Ingrese usuario y contraseña");                  
     }
 
     /**
@@ -136,8 +115,12 @@ public class ServidorHilo extends Thread {
     }
 
     @Override
-    public void run() {
-        preguntarAutentificacion();
+    public void run() {      
+        try {
+            preguntarAutentificacion();
+        } catch (Exception e) {
+            
+        }        
         String opcion = "";
         while (!Thread.currentThread().isInterrupted()) {
             try {
@@ -153,22 +136,39 @@ public class ServidorHilo extends Thread {
                         }
                         if (acabo) {
                             end = System.nanoTime();
-                            double duracionSegundos = (end - start) / 1_000_000_000.0;                            
+                            double duracionSegundos = (end - start) / 1_000_000_000.0;
                             int puntaje = new Random().nextInt(100);
-                            String nombre = "nombre"+new Random().nextInt(100);
-                            escribirMensajeString("FIN_JUEGO");                            
+                            String nombre = "nombre" + new Random().nextInt(100);
+                            escribirMensajeString("FIN_JUEGO");
                             escribirMensajeString(
-                                    nombre+
-                                    " finalizo con "
-                                    +puntaje +
-                                    " puntos en "
-                                    + duracionSegundos + "segundos");                            
+                                    nombre
+                                    + " finalizo con "
+                                    + puntaje
+                                    + " puntos en "
+                                    + duracionSegundos + "segundos");
                             procesador.terminarJuego(nombre, puntaje, duracionSegundos, this);
                         } else {
                             escribirMensajeString("RESULTADO_MOVIMIENTO");
                             escribirMensajeString("Movido a la " + movimiento);
                         }
                         break;
+                    case "AUTENTIFICACION":
+                        String usuario = LeerMensajeString();
+                        String password = LeerMensajeString();
+                        System.out.println(usuario + " " + password);
+                        //Llamar a procesador para saber si cliente existe
+                        jugador = procesador.autentificarUsuario(usuario, password);
+                        // si la respuesta es null entonces jugador no existe en BD
+                        if (jugador == null) {
+                            //El procesador se encarge de la eliminacion de esta conexion
+                            procesador.eliminarConexion(this);
+                        } else {
+                            //Enviar mensaje de exito para que pueda iniciar juego
+                            escribirMensajeString("RESULTADO_AUTENTIFICACION");
+                            escribirMensajeString("exito");
+                            //Iniciar conometro de juego
+                            start = System.nanoTime();
+                        }
                     default:
                 }
             } catch (IOException e) {

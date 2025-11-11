@@ -2,7 +2,6 @@ package udistrital.avanzada.pacman.servidor.Modelo.DAO;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.util.ArrayList;
 import udistrital.avanzada.pacman.servidor.Modelo.Conexion.IConexionAleatorio;
 
 /**
@@ -82,7 +81,7 @@ public class AleatorioDAO implements IAleatorioDAO {
     }
 
     @Override
-    private String[] getMejorJuego() {
+    public String[] getMejorJuego() {
         RandomAccessFile raf = conexion.conectar();
         int cantidadReg = 0;
         try {
@@ -90,7 +89,7 @@ public class AleatorioDAO implements IAleatorioDAO {
         } catch (IOException ex) {
 
         }
-        if (cantidadReg) {
+        if (cantidadReg == 0) {
             return null;
         }
         try {
@@ -108,7 +107,7 @@ public class AleatorioDAO implements IAleatorioDAO {
                     if (puntaje/tiempo > puntajeMejor/tiempoMejor) {
                         nombreMejor = nombre;
                         puntajeMejor = puntaje;
-                        tiempoMejor = tiempoMejor;
+                        tiempoMejor = tiempo;
                     }
                 }
             }
