@@ -31,14 +31,10 @@ public class ControlJugador {
         if (jugadorDAO == null) {
             return false;
         }
-        String[] datos = jugadorDAO.getJugador();
-        // comprobamos que los datos del jugador existen
-        for (int i = 0; i < datos.length; i++) {
-            if(datos[i] == null) {
-                return false;
-            }
+        JugadorVO jugador = jugadorDAO.getJugador();
+        if (jugador.getNombre() != null && jugador.getContrasena() != null) {
+            return false;
         }
-        this.jugador = new JugadorVO(datos[0], datos[1]);
         return true;
     }
 

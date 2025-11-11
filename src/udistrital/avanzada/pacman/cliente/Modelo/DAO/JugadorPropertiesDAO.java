@@ -3,6 +3,7 @@ package udistrital.avanzada.pacman.cliente.Modelo.DAO;
 import java.util.Properties;
 import udistrital.avanzada.pacman.cliente.Modelo.Conexion.ConexionProperties;
 import udistrital.avanzada.pacman.cliente.Modelo.Conexion.IConexionProperties;
+import udistrital.avanzada.pacman.cliente.Modelo.JugadorVO;
 
 /**
  * Clase JugadorPropertiesDAO.
@@ -26,20 +27,18 @@ public class JugadorPropertiesDAO implements IJugadorDAO {
      * {@inheritDoc}
      */
     @Override
-    public String[] getJugador() {
+    public JugadorVO getJugador() {
         Properties props;
-        String[] datos = new String[2];
         try {
             props = conexion.conectar();
-            datos[0] = props.getProperty("usuario.nombre");
-            datos[1] = props.getProperty("usuario.contrasena");
+            String nombre = props.getProperty("usuario.nombre");
+            String contrasena = props.getProperty("usuario.contrasena");
+            return new JugadorVO(nombre, contrasena);
         } catch (RuntimeException e) {
-            datos = null;
-            throw new RuntimeException("Error de conexion a archivo: " + e.getMessage(), e);
+            throw new RuntimeException("Error de conexion a archivo: " + e.getMessage(), e);            
         } finally {
             conexion.desconectar();
         }
-        return datos;
     }
     
     public void setConfiguracionConexion(String rutaArchivo) {

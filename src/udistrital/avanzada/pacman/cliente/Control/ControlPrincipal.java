@@ -3,8 +3,10 @@ package udistrital.avanzada.pacman.cliente.Control;
 import java.io.File;
 import java.io.IOException;
 import javax.swing.SwingUtilities;
+import udistrital.avanzada.pacman.cliente.Modelo.Conexion.ConexionProperties;
 import udistrital.avanzada.pacman.cliente.Modelo.DAO.JugadorPropertiesDAO;
 import udistrital.avanzada.pacman.cliente.Modelo.DAO.PropertiesDAO;
+import udistrital.avanzada.pacman.cliente.Modelo.DAO.IPropertiesDAO;
 
 /**
  * Clase ControlPrincipal.
@@ -21,13 +23,13 @@ public class ControlPrincipal implements MensajeListener {
 
     private ControlVentana cVentana;
     private ControlJugador cJugador;
-    private PropertiesDAO propsDAO;
+    private IPropertiesDAO propsDAO;
     private ControlCliente cCliente;
 
     public ControlPrincipal() {
         this.cVentana = new ControlVentana(this);
         this.cJugador = new ControlJugador();
-        this.propsDAO = new PropertiesDAO();
+        this.propsDAO = new PropertiesDAO(new ConexionProperties());
         this.cCliente = new ControlCliente();
     }
 
