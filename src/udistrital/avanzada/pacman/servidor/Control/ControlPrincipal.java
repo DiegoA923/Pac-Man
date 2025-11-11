@@ -1,6 +1,7 @@
 package udistrital.avanzada.pacman.servidor.Control;
 
 import java.io.File;
+import udistrital.avanzada.pacman.servidor.Modelo.Conexion.ConexionAleatorio;
 
 /**
  * Clase ControlPrincipal.
@@ -18,11 +19,13 @@ public class ControlPrincipal implements ConexionListener {
     private ControlVentana cVentana;
     private ControlServidorHilo cServidorHilo;
     private Servidor servidor;
+    private GestorArchivoAleatorio gAleatorio;
 
     public ControlPrincipal() {
         //this.propsDAO = new PropertiesDAO();
         this.cVentana = new ControlVentana(this); 
-        this.cServidorHilo = new ControlServidorHilo(this);
+        this.gAleatorio = new GestorArchivoAleatorio(new ConexionAleatorio());
+        this.cServidorHilo = new ControlServidorHilo(this, gAleatorio);
         this.servidor = new  Servidor(cServidorHilo);   
         preCarga();
     }
@@ -38,6 +41,9 @@ public class ControlPrincipal implements ConexionListener {
         }       
         //Obtener ruta de archivo
         String ruta = archivoPropiedades.getAbsolutePath();  
+        //ruta debe venir de archivo propiedades
+        gAleatorio.setArchivoAleatorio("specs/data/juegos.txt");
+        
         
         int puerto = 5000;
         servidor.config(puerto);
@@ -46,7 +52,10 @@ public class ControlPrincipal implements ConexionListener {
             return;
         }
         cVentana.mostrarMensajeConsola("escuchando en puerto: "+ puerto);
-        servidor.start();        
+        servidor.start();
+        
+        
+                
         //Despues de asegurar la conexion a BD y levantamiento del servidor mostrar ventana
         //Se hace necesario para poder cerrar el servidor cuando esta activo por primera vez y nadie
         //se va a conectar
@@ -129,9 +138,20 @@ public class ControlPrincipal implements ConexionListener {
      * Metodo para salir de la aplicacion de manera controlada
      */
     public void salir() {    
-        //Mostrar Mejor Jugador
-        cVentana.mostrarMensajeEmergente("Ganador","El mejor es nombre");
-        cVentana.mostrarMensajeConsola("El mejor es nombre");
+        //Mostrar Mejor Jugador ejemplo                
+        String[] mejor = gAleatorio.getMejorJuego();
+        if (mejor == null) {
+            cVentana.mostrarMensajeEmergente("INFO","Error al conectar archivo aleatorio");
+        } else if (mejor.length == 0) {
+            cVentana.mostrarMensajeEmergente("Ganador","No hay registros aun");            
+        } else {
+            cVentana.mostrarMensajeEmergente(
+                    "Ganador",
+                    "El mejor es "+mejor[0]+" con "+ mejor[1]+" puntos en "+mejor[2]+" segundos"
+            );
+            cVentana.mostrarMensajeConsola("El mejor es nombre");
+        }
+                
         //Cerrar conexiones activas
         servidor.cerrarServidor();
         //Cerrar servidor levantado

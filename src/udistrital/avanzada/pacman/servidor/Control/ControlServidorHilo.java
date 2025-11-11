@@ -18,10 +18,12 @@ public class ControlServidorHilo implements ProcesadorPeticiones {
 
     private ArrayList<ServidorHilo> hilos;
     private ConexionListener cListener;
+    private GestorArchivoAleatorio gAleatorio;
 
-    public ControlServidorHilo(ConexionListener listener) {
+    public ControlServidorHilo(ConexionListener listener, GestorArchivoAleatorio gAleatorio) {
         this.cListener = listener;
         this.hilos = new ArrayList<>();
+        this.AleatorioDAO = gAleatorio;
     }
 
     /**
@@ -29,7 +31,7 @@ public class ControlServidorHilo implements ProcesadorPeticiones {
      *
      * @param so conexion a agregar
      */
-    public void agregarConexion(Socket so) {
+    public synchronized void agregarConexion(Socket so) {
         //Inyectamos el procesador de peticiones del cliente
         ServidorHilo hilo = new ServidorHilo(so, this);
         hilos.add(hilo);
@@ -74,6 +76,7 @@ public class ControlServidorHilo implements ProcesadorPeticiones {
      */
     @Override
     public synchronized void terminarJuego(String nombre, int puntaje, double tiempoTotal, ServidorHilo hilo) {
+        gAleatorio.insertarJuego(nombre, puntaje, tiempoTotal);
         //Guardar en el el archivo serializado        
     }
 }
