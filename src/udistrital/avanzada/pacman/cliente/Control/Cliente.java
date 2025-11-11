@@ -114,7 +114,7 @@ public class Cliente {
             if (salida != null) {
                 salida.close();
             }
-            if (!socket.isClosed()) {
+            if (socket != null && !socket.isClosed()) {
                 socket.close();
             }
         } catch (IOException exc) {
