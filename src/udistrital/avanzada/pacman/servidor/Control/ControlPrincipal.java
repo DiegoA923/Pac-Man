@@ -2,6 +2,7 @@ package udistrital.avanzada.pacman.servidor.Control;
 
 import java.io.File;
 import udistrital.avanzada.pacman.servidor.Modelo.Conexion.ConexionAleatorio;
+import udistrital.avanzada.pacman.servidor.Modelo.DAO.AleatorioDAO;
 
 /**
  * Clase ControlPrincipal.
@@ -24,7 +25,7 @@ public class ControlPrincipal implements ConexionListener {
     public ControlPrincipal() {
         //this.propsDAO = new PropertiesDAO();
         this.cVentana = new ControlVentana(this); 
-        this.gAleatorio = new GestorArchivoAleatorio(new ConexionAleatorio());
+        this.gAleatorio = new GestorArchivoAleatorio(new AleatorioDAO(new ConexionAleatorio()));
         this.cServidorHilo = new ControlServidorHilo(this, gAleatorio);
         this.servidor = new  Servidor(cServidorHilo);   
         preCarga();

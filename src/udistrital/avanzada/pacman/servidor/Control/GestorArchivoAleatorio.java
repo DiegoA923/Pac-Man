@@ -13,11 +13,11 @@ import udistrital.avanzada.pacman.servidor.Modelo.DAO.IAleatorioDAO;
  * @version 1.0
  * @since 2025-11-10
  */
-public class GestorArchivoProperties {
+public class GestorArchivoAleatorio {
 
     private IAleatorioDAO dao;
 
-    public GestorArchivoProperties(IAleatorioDAO dao) {
+    public GestorArchivoAleatorio(IAleatorioDAO dao) {
         this.dao = dao;
     }
 
@@ -25,7 +25,7 @@ public class GestorArchivoProperties {
         dao.insertarJuego(nombre, puntaje, tiempo);
     }
 
-    public String[] obtenerMejorJugador() {
+    public String[] getMejorJuego() {
         return dao.getMejorJuego();
     }
 
@@ -37,7 +37,7 @@ public class GestorArchivoProperties {
      */
     public boolean setArchivoAleatorio(String ruta) {
         // Conexion asigna la ruta
-        this.dao.setRutaArchivo(ruta);
+        this.dao.setArchivoAleatorio(ruta);
         return this.dao.conexionValida();
     }
 }

@@ -23,7 +23,7 @@ public class ControlServidorHilo implements ProcesadorPeticiones {
     public ControlServidorHilo(ConexionListener listener, GestorArchivoAleatorio gAleatorio) {
         this.cListener = listener;
         this.hilos = new ArrayList<>();
-        this.AleatorioDAO = gAleatorio;
+        this.gAleatorio = gAleatorio;
     }
 
     /**
