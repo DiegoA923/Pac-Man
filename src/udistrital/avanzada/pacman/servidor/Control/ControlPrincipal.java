@@ -73,10 +73,12 @@ public class ControlPrincipal implements ConexionListener {
         //Comprobar conexion a base de datos si no hay retornar
         try (Connection conn = conexionBD.getConexion()) {
             if (conn == null || conn.isClosed()) {
+                cVentana.mostrarMensajeEmergente("Info","No se pudo establecer conexion con la base de datos.");
                 cVentana.mostrarMensajeConsola("No se pudo establecer conexion con la base de datos.");
                 return;
             }
         } catch (Exception e) {
+            cVentana.mostrarMensajeEmergente("Info","Error en la conexion a base de datos");
             cVentana.mostrarMensajeConsola("Error en la conexion a base de datos: " + e.getMessage());
             return;
         } finally {

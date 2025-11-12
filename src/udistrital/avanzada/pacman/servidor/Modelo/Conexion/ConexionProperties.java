@@ -49,7 +49,7 @@ public class ConexionProperties implements IConexionProperties {
                 fis.close();
             }
         } catch (IOException e) {
-            System.err.println("Error al cerrar el archivo de propiedades: " + e.getMessage());
+            
         }
     }
 
