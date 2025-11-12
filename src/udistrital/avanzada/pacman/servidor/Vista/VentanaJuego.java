@@ -2,6 +2,7 @@ package udistrital.avanzada.pacman.servidor.Vista;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
 
 /**
  * VentanaJuego.
@@ -20,11 +21,10 @@ public class VentanaJuego extends JFrame {
     private final JLabel lblTiempo;
     private final PanelJuego panelJuego;
 
-    
     // Crea la ventana principal.
     public VentanaJuego(String nombreJugador) {
         super("Pac-Man - Jugador: " + nombreJugador);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         setSize(820, 728);
         setLocationRelativeTo(null);
         setResizable(false);
@@ -69,5 +69,9 @@ public class VentanaJuego extends JFrame {
 
     public PanelJuego getPanelJuego() {
         return panelJuego;
+    }
+
+    public void addWindowsListener(WindowAdapter controlador) {
+        addWindowListener(controlador);
     }
 }

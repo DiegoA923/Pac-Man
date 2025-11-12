@@ -1,10 +1,15 @@
 package udistrital.avanzada.pacman.servidor.Control;
 
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.io.*;
 import java.net.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Random;
+import javax.swing.SwingUtilities;
 import udistrital.avanzada.pacman.servidor.Modelo.JugadorVO;
+import udistrital.avanzada.pacman.servidor.Vista.PanelJuego;
+import udistrital.avanzada.pacman.servidor.Vista.VentanaJuego;
 
 /**
  * Clase ServidorHilo
@@ -16,7 +21,7 @@ import udistrital.avanzada.pacman.servidor.Modelo.JugadorVO;
  * @version 1.0
  * @since 2025-11-09
  */
-public class ServidorHilo extends Thread {
+public class ServidorHilo extends Thread implements CerrarVentanaListener {
 
     private Socket socket;
     private DataInputStream entrada;
@@ -26,7 +31,13 @@ public class ServidorHilo extends Thread {
     private int puntaje;
     private Long start;
     private Long end;
-
+    private ControlJuego cJuego;
+    
+    /**
+     * Constructor
+     * @param socket conexion socket
+     * @param procesador clase que procesa los mensajes
+     */
     public ServidorHilo(Socket socket, ProcesadorPeticiones procesador) {
         this.procesador = procesador;
         try {
@@ -34,7 +45,7 @@ public class ServidorHilo extends Thread {
             this.entrada = new DataInputStream(socket.getInputStream());
             this.salida = new DataOutputStream(socket.getOutputStream());
         } catch (IOException ex) {
-        }
+        }        
     }
 
     /**
@@ -42,7 +53,7 @@ public class ServidorHilo extends Thread {
      * terminar la conexion
      */
     public void preguntarAutentificacion() throws IOException {        
-        escribirMensajeString("Autentificacion");
+        escribirMensajeString("AUTENTIFICACION");
         escribirMensajeString("Ingrese usuario y contraseña");                  
     }
 
@@ -91,6 +102,9 @@ public class ServidorHilo extends Thread {
      */
     public void parar() {
         //Enviar mensaje a cliente para cerrar controladamente
+        if (cJuego != null) {
+            SwingUtilities.invokeLater(() ->cJuego.cerrarVentana());            
+        }
         try {
             escribirMensajeString("CERRAR_CONEXION");
             escribirMensajeString("");
@@ -116,6 +130,7 @@ public class ServidorHilo extends Thread {
 
     @Override
     public void run() {      
+        System.out.println("pedir datos");
         try {
             preguntarAutentificacion();
         } catch (Exception e) {
@@ -125,36 +140,56 @@ public class ServidorHilo extends Thread {
         while (!Thread.currentThread().isInterrupted()) {
             try {
                 opcion = LeerMensajeString();
+                System.out.println("comando");
+                System.out.println(opcion);
                 switch (opcion) {
                     case "MOVER":
+                        if (jugador == null || cJuego == null) {
+                            return;
+                        }
                         String movimiento = LeerMensajeString();
                         boolean acabo = false;
                         // para probar que se acaba pero acabo debe venir de 
-                        // donde se calcule el puntaje del juego
-                        if (movimiento.equalsIgnoreCase("f")) {
+                        // donde se calcule el puntaje del juego                        
+                        int casillas = cJuego.moverPacman(movimiento);
+                        String resultado = "";
+                        if (casillas == 0) {
+                            resultado = "No pudo avanzar a "+movimiento.toLowerCase();
+                        } else if(casillas < 0 ) {
+                            resultado = movimiento + " no es un movimiento valido";
+                        } else {
+                            resultado = "Se movio "+casillas+" hacia a "+movimiento.toLowerCase();
+                        }           
+                        
+                        if (movimiento.equalsIgnoreCase("f") || cJuego.getFrutasActuales() == 0) {
                             acabo = true;
                         }
+                        
                         if (acabo) {
                             end = System.nanoTime();
-                            double duracionSegundos = (end - start) / 1_000_000_000.0;
-                            int puntaje = new Random().nextInt(100);
-                            String nombre = "nombre" + new Random().nextInt(100);
+                            double duracionSegundos = (end - start) / 1_000_000_000.0;                          
                             escribirMensajeString("FIN_JUEGO");
                             escribirMensajeString(
-                                    nombre
+                                    jugador.getNombreUsuario()
                                     + " finalizo con "
-                                    + puntaje
+                                    + cJuego.getPuntaje()
                                     + " puntos en "
                                     + duracionSegundos + "segundos");
-                            procesador.terminarJuego(nombre, puntaje, duracionSegundos, this);
+                            procesador.terminarJuego(
+                                    jugador.getNombreUsuario(), 
+                                    cJuego.getPuntaje(), 
+                                    duracionSegundos, 
+                                    this
+                            );
+                            SwingUtilities.invokeLater(() ->cJuego.cerrarVentana());
                         } else {
                             escribirMensajeString("RESULTADO_MOVIMIENTO");
-                            escribirMensajeString("Movido a la " + movimiento);
+                            escribirMensajeString(resultado);
                         }
                         break;
-                    case "AUTENTIFICACION":
+                    case "AUTENTIFICACION":                        
                         String usuario = LeerMensajeString();
-                        String password = LeerMensajeString();
+                        String password = LeerMensajeString();                        
                         System.out.println(usuario + " " + password);
                         //Llamar a procesador para saber si cliente existe
                         jugador = procesador.autentificarUsuario(usuario, password);
@@ -166,16 +201,26 @@ public class ServidorHilo extends Thread {
                             //Enviar mensaje de exito para que pueda iniciar juego
                             escribirMensajeString("RESULTADO_AUTENTIFICACION");
                             escribirMensajeString("exito");
-                            //Iniciar conometro de juego
+                            //Iniciar ventana de juego
+                            VentanaJuego ventana = new VentanaJuego(jugador.getNombreUsuario());
+                            this.cJuego = new ControlJuego(ventana.getPanelJuego(),ventana, this);
+                            cJuego.generarFrutasAleatorias();
+                            //Iniciar conometro de juego                            
                             start = System.nanoTime();
                         }
+                        break;
                     default:
                 }
             } catch (IOException e) {
                 //asegurar que se borrer la conexion
-                procesador.eliminarConexion(this);
+                procesador.eliminarConexion(this);                
                 break;
             }
         }
+    }        
+    
+    @Override
+    public void notificar() {
+        procesador.eliminarConexion(this); 
     }
 }

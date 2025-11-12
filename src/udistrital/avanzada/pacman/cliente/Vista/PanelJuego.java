@@ -20,6 +20,9 @@ public class PanelJuego extends JPanel {
     private JTextArea areaTexto;
     private JScrollPane scrollPane;
 
+    /**
+     * Constructor por defecto.
+     */
     public PanelJuego() {
 
         JPanel panelSuperior = new JPanel(new BorderLayout(5, 5));
@@ -57,7 +60,7 @@ public class PanelJuego extends JPanel {
      * @param texto
      */
     public void mostrarResultado(String texto) {
-        areaTexto.append("- "+texto + "\n");
+        areaTexto.append("- " + texto + "\n");
         txtMovimiento.setText("");
     }
 
@@ -68,11 +71,11 @@ public class PanelJuego extends JPanel {
         areaTexto.setText("");
         txtMovimiento.setText("");
     }
-    
+
     /**
      * Obterner texto del campo texto moviento
-     * 
-     * @return 
+     *
+     * @return
      */
     public String getTextMovimiento() {
         return txtMovimiento.getText().trim();

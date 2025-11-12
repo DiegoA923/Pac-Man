@@ -19,11 +19,16 @@ public class ConexionAleatorio implements IConexionAleatorio {
     private RandomAccessFile archivo;
     private String ruta;
     
+    /**
+     * Constructor por defecto.    
+     */
     public ConexionAleatorio() { 
         this.ruta = "";
     }
     
-    // Conectar al archivo aleatorio
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public RandomAccessFile conectar() {
         try {
@@ -35,7 +40,9 @@ public class ConexionAleatorio implements IConexionAleatorio {
         }
     }
     
-    // Desconectar del archivo aleatorio
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void desconectar() {
         try {
@@ -50,10 +57,7 @@ public class ConexionAleatorio implements IConexionAleatorio {
     }
 
     /**
-     * Metodo para asiganar la ruta del archivo aleatorio con el cual se va a
-     * trabajar
-     *
-     * @param ruta
+     * {@inheritDoc}
      */
     @Override
     public void setRuta(String ruta) {

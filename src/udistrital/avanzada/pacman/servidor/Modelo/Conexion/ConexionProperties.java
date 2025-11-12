@@ -19,7 +19,7 @@ public class ConexionProperties implements IConexionProperties {
 
     private String rutaArchivo;
     private FileInputStream fis;
-
+    
     public ConexionProperties() {
         this.rutaArchivo = null;
         this.fis = null;

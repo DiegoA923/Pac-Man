@@ -2,7 +2,7 @@ package udistrital.avanzada.pacman.cliente.Control;
 
 
 /**
- * enum Comando
+ * Enum Comando
  * 
  * Contiene las acciones que se pueden enviar y recibir
  * del servidor

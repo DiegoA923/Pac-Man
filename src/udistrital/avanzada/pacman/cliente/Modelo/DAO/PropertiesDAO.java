@@ -1,7 +1,6 @@
 package udistrital.avanzada.pacman.cliente.Modelo.DAO;
 
 import java.util.Properties;
-import udistrital.avanzada.pacman.cliente.Modelo.Conexion.ConexionProperties;
 import udistrital.avanzada.pacman.cliente.Modelo.Conexion.IConexionProperties;
 
 /**
@@ -15,29 +14,30 @@ import udistrital.avanzada.pacman.cliente.Modelo.Conexion.IConexionProperties;
  * @version 1.0
  * @since 2025-11-05
  */
-public class PropertiesDAO {
+public class PropertiesDAO implements IPropertiesDAO {
 
     private IConexionProperties conexion;
-
-    public PropertiesDAO() {
-        this.conexion = new ConexionProperties();
+    
+    /**
+     * Contructor
+     * @param conexion fuente de datos
+     */
+    public PropertiesDAO(IConexionProperties conexion) {
+        this.conexion = conexion;
     }  
     
     /**
-     * Configurar ruta de archivo de origen
-     * 
-     * @param rutaArchivo 
+     * {@inheritDoc}
      */
+    @Override
     public void setConfiguracionConexion(String rutaArchivo) {
         conexion.setRutaArchivo(rutaArchivo);
     }
     
     /**
-     * Obtener una propiedad especifica del archivo
-     * 
-     * @param key
-     * @return 
-     */       
+     * {@inheritDoc}
+     */
+    @Override
     public String get (String key) {
         try {
             Properties props = conexion.conectar();

@@ -21,6 +21,9 @@ public class Cliente {
     private DataInputStream entrada;
     private DataOutputStream salida;
 
+    /**
+     * Constructor por defecto.
+     */
     public Cliente() {
         this.ip = null;
         this.puerto = -1;
@@ -81,6 +84,7 @@ public class Cliente {
             sendString(mensaje);
         }
     }
+
     /**
      * Metodo para enviar mensaje personalilzado
      *
@@ -98,7 +102,7 @@ public class Cliente {
         } catch (Exception e) {
             throw new IOException();
         }
-        
+
     }
 
     /**
@@ -114,7 +118,7 @@ public class Cliente {
             if (salida != null) {
                 salida.close();
             }
-            if (!socket.isClosed()) {
+            if (socket != null && !socket.isClosed()) {
                 socket.close();
             }
         } catch (IOException exc) {
