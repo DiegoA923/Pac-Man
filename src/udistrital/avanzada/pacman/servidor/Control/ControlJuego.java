@@ -10,6 +10,8 @@ import java.util.*;
 import javax.swing.Timer;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 /**
  * ControlJuego.
@@ -34,14 +36,14 @@ import java.awt.event.ActionListener;
  * @version 1.0
  * @since 2025-11-11
  */
-public class ControlJuego {
+public class ControlJuego extends WindowAdapter {
 
     // Referencias a la vista
     private final PanelJuego panel;
     private final VentanaJuego ventana;
-
+    
     // Configuración base
-    private final Random random = new Random();
+    private final Random random;
     private final int tamCelda;
     private final int ancho;
     private final int alto;
@@ -49,27 +51,37 @@ public class ControlJuego {
     // Estado del juego
     private int pacCol;   // columna de Pac-Man
     private int pacFila;  // fila de Pac-Man
-    private int puntaje = 0;
-    private int segundos = 0;
+    private int puntaje;
+    private int segundos;
 
     // Elementos del juego
-    private final List<FrutaTipo> frutas = new ArrayList<>();
-    private final List<Point> posiciones = new ArrayList<>();
+    private final List<FrutaTipo> frutas;
+    private final List<Point> posiciones;
 
     // Constantes
     private static final int PASO_CASILLAS = 4;
 
     private Timer temporizador;
+    
+    private CerrarVentanaListener cerrarListener;
 
     /**
      * Crea un controlador asociado a la vista PanelJuego y a la VentanaJuego.
      *
      * @param panel vista donde se pintará el tablero
      * @param ventana vista principal para actualizar el tiempo y puntaje
+     * @param clistener
      */
-    public ControlJuego(PanelJuego panel, VentanaJuego ventana) {
+    public ControlJuego(PanelJuego panel, VentanaJuego ventana, CerrarVentanaListener clistener) {
+        this.random = new Random();
+        this.puntaje = 0;
+        this.segundos = 0;
+        this.frutas = new ArrayList<>();
+        this.posiciones = new ArrayList<>();
+        this.cerrarListener = clistener;
         this.panel = panel;
         this.ventana = ventana;
+        this.ventana.addWindowsListener(this);
 
         this.tamCelda = PanelJuego.getTamCelda();
         this.ancho = PanelJuego.getAnchoTablero();
@@ -135,10 +147,11 @@ public class ControlJuego {
      * colisiones en cada celda intermedia.
      *
      * @param direccion "arriba", "abajo", "izquierda" o "derecha"
+     * @return # casillas que se movio, -1 si el movimiento no es valido
      */
-    public void moverPacman(String direccion) {
+    public int moverPacman(String direccion) {
         direccion = direccion == null ? "derecha" : direccion.toLowerCase();
-
+        int casillasMovidas = 0;
         for (int i = 0; i < PASO_CASILLAS; i++) {
             int nuevaCol = pacCol;
             int nuevaFila = pacFila;
@@ -150,14 +163,16 @@ public class ControlJuego {
                     nuevaFila = Math.min((alto / tamCelda) - 1, pacFila + 1);
                 case "izquierda" ->
                     nuevaCol = Math.max(0, pacCol - 1);
-                default ->
+                case "derecha" ->
                     nuevaCol = Math.min((ancho / tamCelda) - 1, pacCol + 1);
+                default ->
+                    casillasMovidas = -1;
             }
 
             if (nuevaCol == pacCol && nuevaFila == pacFila) {
                 break;
             }
-
+            casillasMovidas += 1;
             // Actualizar posición lógica
             pacCol = nuevaCol;
             pacFila = nuevaFila;
@@ -170,6 +185,7 @@ public class ControlJuego {
         }
 
         panel.setDireccion(direccion);
+        return casillasMovidas;
     }
 
     /**
@@ -233,5 +249,63 @@ public class ControlJuego {
 
     public List<Point> getPosiciones() {
         return List.copyOf(posiciones);
+    }
+    
+    public void cerrarVentana() {
+        if (ventana != null) {            
+            ventana.dispose();            
+        }
+        if (cerrarListener != null) {
+            cerrarListener.notificar();
+        }
+    }
+    
+    public int getFrutasActuales() {
+        return frutas.size();
+    }
+    
+    /**
+     * Genera 4 frutas aleatorias en distintas celdas del tablero. Evita colocar
+     * frutas en la celda central o duplicadas.
+     */
+    public void generarFrutasAleatoriasPrueba() {
+        frutas.clear();
+        posiciones.clear();
+
+        int columnas = ancho / tamCelda;
+        int filas = alto / tamCelda;
+        Set<Point> usadas = new HashSet<>();
+
+        FrutaTipo[] tipos = FrutaTipo.values();
+        int indice = 1;
+        while (frutas.size() < 4) {
+            int col = pacCol+indice;
+            indice +=1;
+            int fila = pacFila;
+
+            // Evitar centro
+            if (col == pacCol && fila == pacFila) {
+                continue;
+            }
+
+            Point celda = new Point(col, fila);
+            if (!usadas.add(celda)) {
+                continue; // evitar duplicados
+            }
+            // Elegir tipo de fruta aleatoria
+            FrutaTipo elegido = tipos[random.nextInt(tipos.length)];
+            frutas.add(elegido);
+
+            // Coordenadas visuales centradas en la celda
+            int offset = (tamCelda - 32) / 2;
+            int px = col * tamCelda + offset - 4;
+            int py = fila * tamCelda + offset - 3;
+            posiciones.add(new Point(px, py));
+        }
+    }
+    
+    @Override
+    public void windowClosing(WindowEvent e) {
+        cerrarVentana();
     }
 }

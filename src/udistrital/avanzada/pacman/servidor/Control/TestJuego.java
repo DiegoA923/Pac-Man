@@ -18,7 +18,7 @@ public class TestJuego {
 
     public static void main(String[] args) {
         VentanaJuego ventana = new VentanaJuego("Diego");
-        ControlJuego control = new ControlJuego(ventana.getPanelJuego(), ventana);
+        ControlJuego control = new ControlJuego(ventana.getPanelJuego(), ventana, null);
         control.generarFrutasAleatorias();
 
         control.generarFrutasAleatorias();

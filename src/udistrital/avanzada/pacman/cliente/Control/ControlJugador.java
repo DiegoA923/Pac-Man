@@ -31,7 +31,7 @@ public class ControlJugador {
         if (jugadorDAO == null) {
             return false;
         }
-        JugadorVO jugador = jugadorDAO.getJugador();
+        jugador = jugadorDAO.getJugador();
         if (jugador.getNombre() == null || jugador.getContrasena() == null) {
             return false;
         }        
@@ -45,7 +45,7 @@ public class ControlJugador {
      */
     public String[] getDatosJugador() {
         jugador = jugadorDAO.getJugador();
-        String[] datos = new String[2];
+        String[] datos = {"",""};
         if (jugador != null) {
             datos[0] = jugador.getNombre();
             datos[1] = jugador.getContrasena();
