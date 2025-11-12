@@ -19,11 +19,13 @@ public class ControlServidorHilo implements ProcesadorPeticiones {
     private ArrayList<ServidorHilo> hilos;
     private ConexionListener cListener;
     private GestorArchivoAleatorio gAleatorio;
+    private ControlJugadores cJugadores;
 
-    public ControlServidorHilo(ConexionListener listener, GestorArchivoAleatorio gAleatorio) {
+    public ControlServidorHilo(ConexionListener listener, GestorArchivoAleatorio gAleatorio, ControlJugadores cJugadores) {
         this.cListener = listener;
         this.hilos = new ArrayList<>();
         this.gAleatorio = gAleatorio;
+        this.cJugadores = cJugadores;
     }
 
     /**
@@ -67,7 +69,14 @@ public class ControlServidorHilo implements ProcesadorPeticiones {
     public synchronized JugadorVO autentificarUsuario(String name, String pass) {
         //peticion a DB para saber si el usuario exite  
         //retornar null si no exite en BD
-        return new JugadorVO();
+        try {
+            if (cJugadores.validarJugador(name, pass)) {
+                return cJugadores.crearJugador(name, pass);
+            }
+        } catch (Exception e) {
+            return null;
+        }   
+        return null;
     }
 
     /**

@@ -42,7 +42,7 @@ public class ServidorHilo extends Thread {
      * terminar la conexion
      */
     public void preguntarAutentificacion() throws IOException {        
-        escribirMensajeString("Autentificacion");
+        escribirMensajeString("AUTENTIFICACION");
         escribirMensajeString("Ingrese usuario y contraseña");                  
     }
 
@@ -116,6 +116,7 @@ public class ServidorHilo extends Thread {
 
     @Override
     public void run() {      
+        System.out.println("pedir datos");
         try {
             preguntarAutentificacion();
         } catch (Exception e) {
@@ -125,6 +126,8 @@ public class ServidorHilo extends Thread {
         while (!Thread.currentThread().isInterrupted()) {
             try {
                 opcion = LeerMensajeString();
+                System.out.println("comando");
+                System.out.println(opcion);
                 switch (opcion) {
                     case "MOVER":
                         String movimiento = LeerMensajeString();
@@ -152,9 +155,9 @@ public class ServidorHilo extends Thread {
                             escribirMensajeString("Movido a la " + movimiento);
                         }
                         break;
-                    case "AUTENTIFICACION":
+                    case "AUTENTIFICACION":                        
                         String usuario = LeerMensajeString();
-                        String password = LeerMensajeString();
+                        String password = LeerMensajeString();                        
                         System.out.println(usuario + " " + password);
                         //Llamar a procesador para saber si cliente existe
                         jugador = procesador.autentificarUsuario(usuario, password);
@@ -169,6 +172,7 @@ public class ServidorHilo extends Thread {
                             //Iniciar conometro de juego
                             start = System.nanoTime();
                         }
+                        break;
                     default:
                 }
             } catch (IOException e) {

@@ -32,9 +32,9 @@ public class ControlJugador {
             return false;
         }
         JugadorVO jugador = jugadorDAO.getJugador();
-        if (jugador.getNombre() != null && jugador.getContrasena() != null) {
+        if (jugador.getNombre() == null || jugador.getContrasena() == null) {
             return false;
-        }
+        }        
         return true;
     }
 
@@ -44,6 +44,7 @@ public class ControlJugador {
      * @return array de string, indice 0 nombre, indice 1 contraseña
      */
     public String[] getDatosJugador() {
+        jugador = jugadorDAO.getJugador();
         String[] datos = new String[2];
         if (jugador != null) {
             datos[0] = jugador.getNombre();
