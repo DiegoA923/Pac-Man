@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import javax.swing.SwingUtilities;
 import udistrital.avanzada.pacman.cliente.Modelo.Conexion.ConexionProperties;
-import udistrital.avanzada.pacman.cliente.Modelo.DAO.JugadorPropertiesDAO;
 import udistrital.avanzada.pacman.cliente.Modelo.DAO.PropertiesDAO;
 import udistrital.avanzada.pacman.cliente.Modelo.DAO.IPropertiesDAO;
 
@@ -22,7 +21,6 @@ import udistrital.avanzada.pacman.cliente.Modelo.DAO.IPropertiesDAO;
 public class ControlPrincipal implements MensajeListener {
 
     private ControlVentana cVentana;
-    private ControlJugador cJugador;
     private IPropertiesDAO propsDAO;
     private ControlCliente cCliente;
 
@@ -31,7 +29,6 @@ public class ControlPrincipal implements MensajeListener {
      */
     public ControlPrincipal() {
         this.cVentana = new ControlVentana(this);
-        this.cJugador = new ControlJugador();
         this.propsDAO = new PropertiesDAO(new ConexionProperties());
         this.cCliente = new ControlCliente();
     }
@@ -51,12 +48,8 @@ public class ControlPrincipal implements MensajeListener {
         }
         //Obtener ruta de archivo
         String ruta = archivoPropiedades.getAbsolutePath();
-        //Asignar ruta a DAOs props y DAO jugador
+        //Asignar ruta a DAO prop
         propsDAO.setConfiguracionConexion(ruta);
-        JugadorPropertiesDAO jpd = new JugadorPropertiesDAO();
-        jpd.setConfiguracionConexion(ruta);
-        //Configurar DAO de jugador
-        cJugador.setJugadorDAO(jpd);
         try {
             int puerto = -1;
             try {
@@ -80,8 +73,6 @@ public class ControlPrincipal implements MensajeListener {
             SwingUtilities.invokeLater(() -> cVentana.mostrarPanelLogin());
 
         } catch (Exception e) {
-            // en caso de error volver a estado inicial controladores
-            cJugador.resetJugador();
             cCliente.reset();
         }
     }
@@ -142,7 +133,10 @@ public class ControlPrincipal implements MensajeListener {
                     SwingUtilities.invokeLater(() -> cVentana.agregarResultadoJuego(mensaje));
                     cCliente.cerrarConexion();
                     break;
-
+                //Mostrar ventana de login
+                case Comando.AUTENTIFICACION:
+                    SwingUtilities.invokeLater(() -> cVentana.mostrarPanelLogin());
+                    break;
                 //Resultado autentificacion    
                 case Comando.RESULTADO_AUTENTIFICACION:
                     if (mensaje.equalsIgnoreCase("exito")) {
@@ -157,8 +151,9 @@ public class ControlPrincipal implements MensajeListener {
                         SwingUtilities.invokeLater(() -> {
                             cVentana.mostrarMensajeInformativo("Error de autenticación",
                                     "Usuario o contraseña incorrectos.");
+                            SwingUtilities.invokeLater(() -> cVentana.mostrarPanelArchivo());
                         });
-
+                        
                         // Cierra los streams y sockets del cliente
                         cCliente.cerrarConexion();
                     }
