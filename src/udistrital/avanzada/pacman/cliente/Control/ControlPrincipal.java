@@ -58,7 +58,6 @@ public class ControlPrincipal implements MensajeListener {
         //Configurar DAO de jugador
         cJugador.setJugadorDAO(jpd);
         try {
-            boolean usuarioValido = cJugador.cargarJugador();
             int puerto = -1;
             try {
                 puerto = Integer.parseInt(propsDAO.get("servidor.puerto"));
@@ -66,17 +65,19 @@ public class ControlPrincipal implements MensajeListener {
             }
             String ip = propsDAO.get("servidor.ip");
             //Propiedades no validas retornar
-            if (!usuarioValido || ip == null || puerto < 0) {
-                cJugador.resetJugador();
+            if (ip == null || puerto < 0) {
                 cCliente.reset();
-                cVentana.mostrarMensajeInformativo("Info", "Archivo no tiene configuracion requerida");
+                cVentana.mostrarMensajeInformativo("Info", "Archivo no tiene configuración de conexión válida");
                 return;
             }
+
             //No se pudo conectar al servidor 
             if (!cCliente.conectar(ip, puerto, this)) {
                 cVentana.mostrarMensajeInformativo("Info", "No se pudo realizar la conexion al servidor");
                 return;
             }
+
+            SwingUtilities.invokeLater(() -> cVentana.mostrarPanelLogin());
 
         } catch (Exception e) {
             // en caso de error volver a estado inicial controladores
@@ -99,6 +100,32 @@ public class ControlPrincipal implements MensajeListener {
     }
 
     /**
+     * Envía las credenciales de inicio de sesión al servidor.
+     * <p>
+     * El servidor espera recibir el comando <b>AUTENTIFICACION</b>, seguido de
+     * dos mensajes consecutivos: el nombre de usuario y la contraseña. Este
+     * método cumple con ese protocolo de comunicación.
+     * </p>
+     *
+     * @param usuario nombre de usuario del cliente
+     * @param password contraseña del usuario
+     */
+    public void enviarLogin(String usuario, String password) {
+        try {
+            // Enviar comando principal para indicar autenticación
+            cCliente.enviarMensajeString("AUTENTIFICACION");
+
+            // Enviar usuario y contraseña en mensajes separados
+            cCliente.enviarMensajeString(usuario);
+            cCliente.enviarMensajeString(password);
+
+        } catch (IOException e) {
+            cVentana.mostrarMensajeInformativo("Error",
+                    "No se pudo enviar la autenticación al servidor.\n" + e.getMessage());
+        }
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override
@@ -116,25 +143,27 @@ public class ControlPrincipal implements MensajeListener {
                     cCliente.cerrarConexion();
                     break;
 
-                //Enviar datos de cliente para autentificar si es solicitado por el servidor
-                case Comando.AUTENTIFICACION:
-                    String[] datosJugador = cJugador.getDatosJugador();
-                    System.out.println(datosJugador[0] + datosJugador[1]);
-                    cCliente.enviarMensajeString("AUTENTIFICACION");
-                    cCliente.enviarMensajeString(datosJugador[0]);
-                    cCliente.enviarMensajeString(datosJugador[1]);
-                    break;
                 //Resultado autentificacion    
                 case Comando.RESULTADO_AUTENTIFICACION:
                     if (mensaje.equalsIgnoreCase("exito")) {
-                        //Si autentificacion exitosa mostrar ventana para jugar    
-                        SwingUtilities.invokeLater(() -> cVentana.mostrarPanelComando());
+                        // Autenticación exitosa
+                        SwingUtilities.invokeLater(() -> {
+                            cVentana.mostrarMensajeInformativo("Inicio de sesión",
+                                    "¡Inicio de sesión exitoso! Bienvenido al juego.");
+                            cVentana.mostrarPanelComando();
+                        });
                     } else {
-                        //Si no mostra que hubo error
-                        cVentana.mostrarMensajeInformativo("Info", "Autentificacion fallida");
+                        // Autenticación fallida: informar al usuario y cerrar recursos
+                        SwingUtilities.invokeLater(() -> {
+                            cVentana.mostrarMensajeInformativo("Error de autenticación",
+                                    "Usuario o contraseña incorrectos.");
+                        });
+
+                        // Cierra los streams y sockets del cliente
                         cCliente.cerrarConexion();
                     }
                     break;
+
                 //cerrar conexion si no se ha cerrado correctamente    
                 case Comando.CERRAR_CONEXION:
                     SwingUtilities.invokeLater(() -> cVentana.agregarResultadoJuego(mensaje));

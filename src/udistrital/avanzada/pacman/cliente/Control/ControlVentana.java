@@ -31,20 +31,29 @@ public class ControlVentana implements ActionListener {
     public ControlVentana(ControlPrincipal logica) {
         this.logica = logica;
         this.panelJuego = new PanelJuego();
-        panelJuego.addActionListenerTxtMovimiento(
-                new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String texto = panelJuego.getTextMovimiento();
-                if (!texto.isEmpty()) {
-                    //Llamar logica para enviar moviento
-                    logica.enviarMovimiento(texto);
+        panelJuego.addMovimientoListener(
+                e -> {
+                    String movimiento = e.getActionCommand();
+                    logica.enviarMovimiento(movimiento);
                 }
-            }
-        }
         );
+
         this.ventanaPrincipal = new VentanaPrincipal(panelJuego);
         ventanaPrincipal.setBtnsListener(this);
+
+        ventanaPrincipal.setLoginListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String usuario = ventanaPrincipal.getUsuarioLogin();
+                String contrasena = ventanaPrincipal.getContrasenaLogin();
+                if (usuario.isEmpty() || contrasena.isEmpty()) {
+                    mostrarMensajeInformativo("Error", "Debe ingresar usuario y contraseña");
+                    return;
+                }
+                logica.enviarLogin(usuario, contrasena);
+            }
+        });
+
     }
 
     /**
@@ -81,10 +90,18 @@ public class ControlVentana implements ActionListener {
     }
 
     /**
+     * Metodo para mostrar panel para que el usuario ingrese
+     */
+    public void mostrarPanelLogin() {
+        ventanaPrincipal.mostrarPanel("login");
+    }
+
+    /**
      * Metodo para mostrar panel para jugar
      */
     public void mostrarPanelComando() {
         ventanaPrincipal.mostrarPanel("juego");
+        panelJuego.requestFocusInWindow();
     }
 
     /**
