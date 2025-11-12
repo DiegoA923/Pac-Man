@@ -52,8 +52,7 @@ public class GestorArchivoProperties {
                 return false;
             }
 
-            archivoSeleccionado = chooser.getSelectedFile();
-            System.out.println("Archivo seleccionado: " + archivoSeleccionado.getAbsolutePath());
+            archivoSeleccionado = chooser.getSelectedFile();            
 
             conexionProperties = new ConexionProperties(archivoSeleccionado.getAbsolutePath());
             propiedades = conexionProperties.conectar();
@@ -61,7 +60,7 @@ public class GestorArchivoProperties {
             return true;
 
         } catch (Exception e) {
-            System.err.println("Error al cargar archivo de propiedades: " + e.getMessage());
+            
             return false;
         }
     }
@@ -79,7 +78,7 @@ public class GestorArchivoProperties {
             propiedades = conexionProperties.conectar();
             return true;
         } catch (Exception e) {
-            System.err.println("Error al cargar archivo: " + e.getMessage());
+            
             return false;
         }
     }
@@ -110,8 +109,7 @@ public class GestorArchivoProperties {
      */
     public List<JugadorVO> cargarJugadoresIniciales() {
         List<JugadorVO> jugadores = new ArrayList<>();
-        if (propiedades == null) {
-            System.err.println("No hay propiedades cargadas.");
+        if (propiedades == null) {           
             return jugadores;
         }
 
@@ -125,7 +123,7 @@ public class GestorArchivoProperties {
                 }
             }
         } catch (NumberFormatException e) {
-            System.err.println("Error al leer la cantidad de jugadores: " + e.getMessage());
+            
         }
 
         return jugadores;

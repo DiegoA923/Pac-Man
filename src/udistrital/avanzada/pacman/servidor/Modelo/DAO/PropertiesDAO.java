@@ -60,7 +60,7 @@ public class PropertiesDAO implements IPropertiesDAO {
                 }
             }
         } catch (NumberFormatException e) {
-            System.err.println("Error al leer jugadores iniciales: " + e.getMessage());
+            
         }
 
         return jugadores;

@@ -131,7 +131,6 @@ public class ServidorHilo extends Thread implements CerrarVentanaListener {
 
     @Override
     public void run() {
-        System.out.println("pedir datos");
         try {
             preguntarAutentificacion();
         } catch (Exception e) {
@@ -141,8 +140,6 @@ public class ServidorHilo extends Thread implements CerrarVentanaListener {
         while (!Thread.currentThread().isInterrupted()) {
             try {
                 opcion = LeerMensajeString();
-                System.out.println("comando");
-                System.out.println(opcion);
                 switch (opcion) {
                     case "MOVER":
                         if (jugador == null || cJuego == null) {
@@ -191,7 +188,6 @@ public class ServidorHilo extends Thread implements CerrarVentanaListener {
                     case "AUTENTIFICACION":
                         String usuario = LeerMensajeString();
                         String password = LeerMensajeString();
-                        System.out.println("Intento de login -> Usuario: " + usuario + ", Password: " + password);
 
                         // Llamar al procesador para validar las credenciales
                         jugador = procesador.autentificarUsuario(usuario, password);
