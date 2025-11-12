@@ -199,8 +199,7 @@ public class ServidorHilo extends Thread implements CerrarVentanaListener {
                             //Iniciar ventana de juego
                             VentanaJuego ventana = new VentanaJuego(jugador.getNombreUsuario());
                             this.cJuego = new ControlJuego(ventana.getPanelJuego(),ventana, this);
-                            cJuego.generarFrutasAleatoriasPrueba();    
-                            cJuego.generarFrutasAleatoriasPrueba();    
+                            cJuego.generarFrutasAleatorias();
                             //Iniciar conometro de juego                            
                             start = System.nanoTime();
                         }
