@@ -23,6 +23,7 @@ public class VentanaPrincipal extends JFrame {
     private JButton btnEscogerArchivo;
     private CardLayout cardLayout;
     private JPanel contenedor;
+    private LoginCliente panelLogin;
 
     /**
      * Constructor
@@ -38,10 +39,10 @@ public class VentanaPrincipal extends JFrame {
         setLocationRelativeTo(null);
         setResizable(false);
         cardLayout = new CardLayout();
+        contenedor = new JPanel(cardLayout);
 
         JPanel escogerArchivo = new JPanel();
         escogerArchivo.setLayout(new BoxLayout(escogerArchivo, BoxLayout.Y_AXIS));
-
         escogerArchivo.setAlignmentX(Component.CENTER_ALIGNMENT);
         escogerArchivo.setAlignmentY(Component.CENTER_ALIGNMENT);
 
@@ -59,9 +60,12 @@ public class VentanaPrincipal extends JFrame {
         escogerArchivo.add(Box.createVerticalStrut(10));
         escogerArchivo.add(btnEscogerArchivo);
         escogerArchivo.add(Box.createVerticalGlue());
+        
+        panelLogin = new LoginCliente();
 
         contenedor = new JPanel(cardLayout);
         contenedor.add(escogerArchivo, "archivo");
+        contenedor.add(panelLogin, "login");
         contenedor.add(panelJuego, "juego");
 
         add(contenedor, BorderLayout.CENTER);
@@ -117,4 +121,17 @@ public class VentanaPrincipal extends JFrame {
     public void mostrarPanel(String nombre) {
         cardLayout.show(contenedor, nombre);
     }
+
+    public void setLoginListener(ActionListener al) {
+        panelLogin.setListener(al);
+    }
+
+    public String getUsuarioLogin() {
+        return panelLogin.getUsuario();
+    }
+
+    public String getContrasenaLogin() {
+        return panelLogin.getContrasena();
+    }
+
 }

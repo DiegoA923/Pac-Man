@@ -32,9 +32,10 @@ public class ServidorHilo extends Thread implements CerrarVentanaListener {
     private Long start;
     private Long end;
     private ControlJuego cJuego;
-    
+
     /**
      * Constructor
+     *
      * @param socket conexion socket
      * @param procesador clase que procesa los mensajes
      */
@@ -45,16 +46,16 @@ public class ServidorHilo extends Thread implements CerrarVentanaListener {
             this.entrada = new DataInputStream(socket.getInputStream());
             this.salida = new DataOutputStream(socket.getOutputStream());
         } catch (IOException ex) {
-        }        
+        }
     }
 
     /**
      * Solicita la autentificacion del cliente para saber si iniciar el juego o
      * terminar la conexion
      */
-    public void preguntarAutentificacion() throws IOException {        
+    public void preguntarAutentificacion() throws IOException {
         escribirMensajeString("AUTENTIFICACION");
-        escribirMensajeString("Ingrese usuario y contraseña");                  
+        escribirMensajeString("Ingrese usuario y contraseña");
     }
 
     /**
@@ -103,7 +104,7 @@ public class ServidorHilo extends Thread implements CerrarVentanaListener {
     public void parar() {
         //Enviar mensaje a cliente para cerrar controladamente
         if (cJuego != null) {
-            SwingUtilities.invokeLater(() ->cJuego.cerrarVentana());            
+            SwingUtilities.invokeLater(() -> cJuego.cerrarVentana());
         }
         try {
             escribirMensajeString("CERRAR_CONEXION");
@@ -129,13 +130,13 @@ public class ServidorHilo extends Thread implements CerrarVentanaListener {
     }
 
     @Override
-    public void run() {      
+    public void run() {
         System.out.println("pedir datos");
         try {
             preguntarAutentificacion();
         } catch (Exception e) {
-            
-        }        
+
+        }
         String opcion = "";
         while (!Thread.currentThread().isInterrupted()) {
             try {
@@ -154,20 +155,20 @@ public class ServidorHilo extends Thread implements CerrarVentanaListener {
                         int casillas = cJuego.moverPacman(movimiento);
                         String resultado = "";
                         if (casillas == 0) {
-                            resultado = "No pudo avanzar a "+movimiento.toLowerCase();
-                        } else if(casillas < 0 ) {
+                            resultado = "No pudo avanzar a " + movimiento.toLowerCase();
+                        } else if (casillas < 0) {
                             resultado = movimiento + " no es un movimiento valido";
                         } else {
-                            resultado = "Se movio "+casillas+" hacia a "+movimiento.toLowerCase();
-                        }           
-                        
+                            resultado = "Se movio " + casillas + " hacia a " + movimiento.toLowerCase();
+                        }
+
                         if (movimiento.equalsIgnoreCase("f") || cJuego.getFrutasActuales() == 0) {
                             acabo = true;
                         }
-                        
+
                         if (acabo) {
                             end = System.nanoTime();
-                            double duracionSegundos = (end - start) / 1_000_000_000.0;                          
+                            double duracionSegundos = (end - start) / 1_000_000_000.0;
                             escribirMensajeString("FIN_JUEGO");
                             escribirMensajeString(
                                     jugador.getNombreUsuario()
@@ -176,36 +177,44 @@ public class ServidorHilo extends Thread implements CerrarVentanaListener {
                                     + " puntos en "
                                     + duracionSegundos + "segundos");
                             procesador.terminarJuego(
-                                    jugador.getNombreUsuario(), 
-                                    cJuego.getPuntaje(), 
-                                    duracionSegundos, 
+                                    jugador.getNombreUsuario(),
+                                    cJuego.getPuntaje(),
+                                    duracionSegundos,
                                     this
                             );
-                            SwingUtilities.invokeLater(() ->cJuego.cerrarVentana());
+                            SwingUtilities.invokeLater(() -> cJuego.cerrarVentana());
                         } else {
                             escribirMensajeString("RESULTADO_MOVIMIENTO");
                             escribirMensajeString(resultado);
                         }
                         break;
-                    case "AUTENTIFICACION":                        
+                    case "AUTENTIFICACION":
                         String usuario = LeerMensajeString();
-                        String password = LeerMensajeString();                        
-                        System.out.println(usuario + " " + password);
-                        //Llamar a procesador para saber si cliente existe
+                        String password = LeerMensajeString();
+                        System.out.println("Intento de login -> Usuario: " + usuario + ", Password: " + password);
+
+                        // Llamar al procesador para validar las credenciales
                         jugador = procesador.autentificarUsuario(usuario, password);
-                        // si la respuesta es null entonces jugador no existe en BD
+
                         if (jugador == null) {
-                            //El procesador se encarge de la eliminacion de esta conexion
+                            // Usuario inválido: enviar mensaje de error antes de cerrar la conexión
+                            escribirMensajeString("RESULTADO_AUTENTIFICACION");
+                            escribirMensajeString("error");
+
+                            // Luego permitir que el procesador elimine la conexión y libere recursos
                             procesador.eliminarConexion(this);
+
                         } else {
-                            //Enviar mensaje de exito para que pueda iniciar juego
+                            // Usuario válido: enviar mensaje de éxito
                             escribirMensajeString("RESULTADO_AUTENTIFICACION");
                             escribirMensajeString("exito");
-                            //Iniciar ventana de juego
+
+                            // Iniciar la ventana de juego y la lógica correspondiente
                             VentanaJuego ventana = new VentanaJuego(jugador.getNombreUsuario());
-                            this.cJuego = new ControlJuego(ventana.getPanelJuego(),ventana, this);
+                            this.cJuego = new ControlJuego(ventana.getPanelJuego(), ventana, this);
                             cJuego.generarFrutasAleatorias();
-                            //Iniciar conometro de juego                            
+
+                            // Iniciar el cronómetro de juego
                             start = System.nanoTime();
                         }
                         break;
@@ -213,14 +222,14 @@ public class ServidorHilo extends Thread implements CerrarVentanaListener {
                 }
             } catch (IOException e) {
                 //asegurar que se borrer la conexion
-                procesador.eliminarConexion(this);                
+                procesador.eliminarConexion(this);
                 break;
             }
         }
-    }        
-    
+    }
+
     @Override
     public void notificar() {
-        procesador.eliminarConexion(this); 
+        procesador.eliminarConexion(this);
     }
 }
