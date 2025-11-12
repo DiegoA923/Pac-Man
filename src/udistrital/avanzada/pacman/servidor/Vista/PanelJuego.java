@@ -28,7 +28,8 @@ public class PanelJuego extends JPanel {
     private static final int FRUTA_FONT_SIZE = 28;// tamaño del icono fruta al dibujar
 
     // Estado de dibujo (valores en píxeles)
-    private int pacX, pacY;                         // esquina superior izquierda del sprite Pac-Man
+    private int pacX;
+    private int pacY;                         // esquina superior izquierda del sprite Pac-Man
     private String direccion = "derecha";           // orientación visual de Pac-Man
     private List<FrutaTipo> frutas;                 // tipos de frutas a dibujar
     private java.util.List<Point> posicionesFrutas; // posiciones (px) donde dibujar los iconos

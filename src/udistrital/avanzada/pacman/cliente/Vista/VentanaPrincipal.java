@@ -9,7 +9,8 @@ import javax.swing.filechooser.*;
 /**
  * Clase VentanaPrincipal.
  * <p>
- * Descripción:
+ * Esta clase representa la vista base del sistema y recibe su panel principal
+ * (PanelJuego) mediante inyección de dependencias.
  * </p>
  *
  * @author Diego
@@ -23,6 +24,12 @@ public class VentanaPrincipal extends JFrame {
     private CardLayout cardLayout;
     private JPanel contenedor;
 
+    /**
+     * Constructor
+     *
+     * @param panelJuego panel de interaccion de juego
+     * @throws HeadlessException
+     */
     public VentanaPrincipal(PanelJuego panelJuego) throws HeadlessException {
         super("Cliente Pac-Man");
         // Configuración base de la ventana

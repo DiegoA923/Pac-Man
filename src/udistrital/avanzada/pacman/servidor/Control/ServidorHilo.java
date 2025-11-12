@@ -32,7 +32,12 @@ public class ServidorHilo extends Thread implements CerrarVentanaListener {
     private Long start;
     private Long end;
     private ControlJuego cJuego;
-
+    
+    /**
+     * Constructor
+     * @param socket conexion socket
+     * @param procesador clase que procesa los mensajes
+     */
     public ServidorHilo(Socket socket, ProcesadorPeticiones procesador) {
         this.procesador = procesador;
         try {

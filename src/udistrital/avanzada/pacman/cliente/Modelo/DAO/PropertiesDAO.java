@@ -17,7 +17,11 @@ import udistrital.avanzada.pacman.cliente.Modelo.Conexion.IConexionProperties;
 public class PropertiesDAO implements IPropertiesDAO {
 
     private IConexionProperties conexion;
-
+    
+    /**
+     * Contructor
+     * @param conexion fuente de datos
+     */
     public PropertiesDAO(IConexionProperties conexion) {
         this.conexion = conexion;
     }  

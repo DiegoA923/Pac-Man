@@ -41,7 +41,7 @@ public class ControlJuego extends WindowAdapter {
     // Referencias a la vista
     private final PanelJuego panel;
     private final VentanaJuego ventana;
-    
+
     // Configuración base
     private final Random random;
     private final int tamCelda;
@@ -62,7 +62,7 @@ public class ControlJuego extends WindowAdapter {
     private static final int PASO_CASILLAS = 4;
 
     private Timer temporizador;
-    
+
     private CerrarVentanaListener cerrarListener;
 
     /**
@@ -239,31 +239,54 @@ public class ControlJuego extends WindowAdapter {
         panel.setPacmanPos(px, py);
     }
 
+    /**
+     * Obtener puntaje actual
+     *
+     * @return
+     */
     public int getPuntaje() {
         return puntaje;
     }
 
+    /**
+     * Obtener copia de frutas
+     *
+     * @return lista de frutas
+     */
     public List<FrutaTipo> getFrutas() {
         return List.copyOf(frutas);
     }
 
+    /**
+     * Obtener copia de posiciones
+     *
+     * @return lista de Point
+     */
     public List<Point> getPosiciones() {
         return List.copyOf(posiciones);
     }
-    
+
+    /**
+     * Metodo personalizado para cerrar la ventana de juego
+     */
     public void cerrarVentana() {
-        if (ventana != null) {            
-            ventana.dispose();            
+        if (ventana != null) {
+            ventana.dispose();
         }
         if (cerrarListener != null) {
             cerrarListener.notificar();
         }
     }
-    
+
+    /**
+     * Obtener el numero de frutas activas en pantalla
+     *
+     * @return numero de frutas
+     */
     public int getFrutasActuales() {
         return frutas.size();
     }
-    
+
     /**
      * Genera 4 frutas aleatorias en distintas celdas del tablero. Evita colocar
      * frutas en la celda central o duplicadas.
@@ -279,8 +302,8 @@ public class ControlJuego extends WindowAdapter {
         FrutaTipo[] tipos = FrutaTipo.values();
         int indice = 1;
         while (frutas.size() < 4) {
-            int col = pacCol+indice;
-            indice +=1;
+            int col = pacCol + indice;
+            indice += 1;
             int fila = pacFila;
 
             // Evitar centro
@@ -303,7 +326,12 @@ public class ControlJuego extends WindowAdapter {
             posiciones.add(new Point(px, py));
         }
     }
-    
+
+    /**
+     * Metodo para controlar el cierre de la ventana
+     *
+     * @param e
+     */
     @Override
     public void windowClosing(WindowEvent e) {
         cerrarVentana();

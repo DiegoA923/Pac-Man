@@ -1,9 +1,9 @@
 package udistrital.avanzada.pacman.cliente.Modelo;
 
 /**
- * Clase JugadorVO.
+ * Clase JugadorVO
  * <p>
- * Descripción:
+ * Representa un jugador dentro del sistema del juego Pac-Man.
  * </p>
  *
  * @author Diego

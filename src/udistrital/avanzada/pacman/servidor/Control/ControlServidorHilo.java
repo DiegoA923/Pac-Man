@@ -19,9 +19,16 @@ public class ControlServidorHilo implements ProcesadorPeticiones {
     private ArrayList<ServidorHilo> hilos;
     private ConexionListener cListener;
     private GestorArchivoAleatorio gAleatorio;
-    private ControlJugadores cJugadores;
+    private ControlJugador cJugadores;
 
-    public ControlServidorHilo(ConexionListener listener, GestorArchivoAleatorio gAleatorio, ControlJugadores cJugadores) {
+    /**
+     * Constructor
+     *
+     * @param listener quien escucha las conexiones
+     * @param gAleatorio controlador para la gestion con el archivo aleatorio
+     * @param cJugadores controlador para la gestion con JugadorVO
+     */
+    public ControlServidorHilo(ConexionListener listener, GestorArchivoAleatorio gAleatorio, ControlJugador cJugadores) {
         this.cListener = listener;
         this.hilos = new ArrayList<>();
         this.gAleatorio = gAleatorio;
@@ -51,8 +58,7 @@ public class ControlServidorHilo implements ProcesadorPeticiones {
     }
 
     /**
-     * {@inheritDoc}
-     *  Metodo sincronizado para que lo usen los hilos
+     * {@inheritDoc} Metodo sincronizado para que lo usen los hilos
      */
     @Override
     public synchronized void eliminarConexion(ServidorHilo so) {
@@ -62,8 +68,7 @@ public class ControlServidorHilo implements ProcesadorPeticiones {
     }
 
     /**
-     * {@inheritDoc}
-     * Metodo sincronizado para que lo usen los hilos
+     * {@inheritDoc} Metodo sincronizado para que lo usen los hilos
      */
     @Override
     public synchronized JugadorVO autentificarUsuario(String name, String pass) {
@@ -75,13 +80,12 @@ public class ControlServidorHilo implements ProcesadorPeticiones {
             }
         } catch (Exception e) {
             return null;
-        }   
+        }
         return null;
     }
 
     /**
-     * {@inheritDoc}
-     *  Metodo sincronizado para que lo usen los hilos
+     * {@inheritDoc} Metodo sincronizado para que lo usen los hilos
      */
     @Override
     public synchronized void terminarJuego(String nombre, int puntaje, double tiempoTotal, ServidorHilo hilo) {

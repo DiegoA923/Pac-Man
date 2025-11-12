@@ -19,9 +19,12 @@ public class JugadorPropertiesDAO implements IJugadorDAO {
 
     private IConexionProperties conexion;
 
+    /**
+     * Constructor por defecto.
+     */
     public JugadorPropertiesDAO() {
         this.conexion = new ConexionProperties();
-    }        
+    }
 
     /**
      * {@inheritDoc}
@@ -35,13 +38,18 @@ public class JugadorPropertiesDAO implements IJugadorDAO {
             String contrasena = props.getProperty("usuario.contrasena");
             return new JugadorVO(nombre, contrasena);
         } catch (RuntimeException e) {
-            throw new RuntimeException("Error de conexion a archivo: " + e.getMessage(), e);            
+            throw new RuntimeException("Error de conexion a archivo: " + e.getMessage(), e);
         } finally {
             conexion.desconectar();
         }
     }
-    
+
+    /**
+     * Modificar archivo de fuente
+     *
+     * @param rutaArchivo
+     */
     public void setConfiguracionConexion(String rutaArchivo) {
         conexion.setRutaArchivo(rutaArchivo);
-    }   
+    }
 }

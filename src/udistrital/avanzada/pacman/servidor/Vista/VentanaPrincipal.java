@@ -22,6 +22,9 @@ public class VentanaPrincipal extends JFrame {
     private final JButton btnSalir;
     private final JPanel Contenedor;
 
+    /**
+     * Constructor por defecto.
+     */
     public VentanaPrincipal() {
         super("Servidor Pac-Man");
         // Configuración base de la ventana

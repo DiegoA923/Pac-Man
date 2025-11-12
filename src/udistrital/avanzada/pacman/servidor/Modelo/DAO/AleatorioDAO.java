@@ -5,10 +5,9 @@ import java.io.RandomAccessFile;
 import udistrital.avanzada.pacman.servidor.Modelo.Conexion.IConexionAleatorio;
 
 /**
- * Clase DAO
+ * Clase AleatorioDAO
  *
- * Gestiona las operaciones de crear y listar las mascotas en un archivo
- * aleatorio
+ * Gestiona las operaciones que se pueden hacer sobre un archivo aleatorio
  *
  * @author Mauricio
  * @since 2025-11-09
@@ -24,8 +23,7 @@ public class AleatorioDAO implements IAleatorioDAO {
     }
 
     /**
-     * Metodo para escribir un juego
-     *
+     * {@inheritDoc}
      */
     @Override
     public void insertarJuego(String nombre, int puntos, double tiempo) {
@@ -61,18 +59,24 @@ public class AleatorioDAO implements IAleatorioDAO {
         }
     }
 
+    /**
+     * Metodo custom para leer una cadena de texto
+     *
+     * @param archivo origen de lectura
+     * @param tamaño cuanto va a leer
+     * @return
+     * @throws IOException
+     */
     private String leerCadena(RandomAccessFile archivo, int tamaño) throws IOException {
         char[] buffer = new char[tamaño];
-        for (int i = 0; i < NOMBRE_LEN; i++) {
+        for (int i = 0; i < tamaño; i++) {
             buffer[i] = archivo.readChar();
         }
         return new String(buffer);
     }
 
     /**
-     * Metodo para asignar la ruta del archivo aleatorio a la conexion
-     *
-     * @param ruta
+     * {@inheritDoc}
      */
     @Override
     public void setArchivoAleatorio(String ruta) {
@@ -80,6 +84,9 @@ public class AleatorioDAO implements IAleatorioDAO {
         this.conexion.setRuta(ruta);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String[] getMejorJuego() {
         RandomAccessFile raf = conexion.conectar();
@@ -99,19 +106,19 @@ public class AleatorioDAO implements IAleatorioDAO {
             String nombreMejor = "";
             int puntajeMejor = 0;
             double tiempoMejor = 10000000;
-            for(int i = 0; i < cantidadReg; i++) {
-                if(raf.getFilePointer() < raf.length()) {
+            for (int i = 0; i < cantidadReg; i++) {
+                if (raf.getFilePointer() < raf.length()) {
                     String nombre = leerCadena(raf, NOMBRE_LEN).trim();
                     int puntaje = raf.readInt();
                     double tiempo = raf.readDouble();
-                    if (puntaje/tiempo > puntajeMejor/tiempoMejor) {
+                    if (puntaje / tiempo > puntajeMejor / tiempoMejor) {
                         nombreMejor = nombre;
                         puntajeMejor = puntaje;
                         tiempoMejor = tiempo;
                     }
                 }
             }
-            return new String[] {
+            return new String[]{
                 nombreMejor,
                 String.valueOf(puntajeMejor),
                 String.valueOf(tiempoMejor)
@@ -123,6 +130,9 @@ public class AleatorioDAO implements IAleatorioDAO {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean conexionValida() {
         try {

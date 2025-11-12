@@ -11,8 +11,8 @@ import udistrital.avanzada.pacman.cliente.Modelo.DAO.IPropertiesDAO;
 /**
  * Clase ControlPrincipal.
  * <p>
- * Inicializa controladores y se encarga de delegar acciones a los controladores
- * segun se requiera. Punto centra de la aplicacion
+ * Punto central de inicialización de la aplicación. Inicializa controladores y
+ * se encarga de delegar segun se requiera.
  * </p>
  *
  * @author Mauricio
@@ -26,6 +26,9 @@ public class ControlPrincipal implements MensajeListener {
     private IPropertiesDAO propsDAO;
     private ControlCliente cCliente;
 
+    /**
+     * Constructor por defecto.
+     */
     public ControlPrincipal() {
         this.cVentana = new ControlVentana(this);
         this.cJugador = new ControlJugador();
@@ -49,8 +52,8 @@ public class ControlPrincipal implements MensajeListener {
         //Obtener ruta de archivo
         String ruta = archivoPropiedades.getAbsolutePath();
         //Asignar ruta a DAOs props y DAO jugador
-        propsDAO.setConfiguracionConexion(ruta);        
-        JugadorPropertiesDAO jpd = new JugadorPropertiesDAO();        
+        propsDAO.setConfiguracionConexion(ruta);
+        JugadorPropertiesDAO jpd = new JugadorPropertiesDAO();
         jpd.setConfiguracionConexion(ruta);
         //Configurar DAO de jugador
         cJugador.setJugadorDAO(jpd);
@@ -74,7 +77,7 @@ public class ControlPrincipal implements MensajeListener {
                 cVentana.mostrarMensajeInformativo("Info", "No se pudo realizar la conexion al servidor");
                 return;
             }
-            
+
         } catch (Exception e) {
             // en caso de error volver a estado inicial controladores
             cJugador.resetJugador();
@@ -116,7 +119,7 @@ public class ControlPrincipal implements MensajeListener {
                 //Enviar datos de cliente para autentificar si es solicitado por el servidor
                 case Comando.AUTENTIFICACION:
                     String[] datosJugador = cJugador.getDatosJugador();
-                    System.out.println(datosJugador[0]+datosJugador[1]);
+                    System.out.println(datosJugador[0] + datosJugador[1]);
                     cCliente.enviarMensajeString("AUTENTIFICACION");
                     cCliente.enviarMensajeString(datosJugador[0]);
                     cCliente.enviarMensajeString(datosJugador[1]);

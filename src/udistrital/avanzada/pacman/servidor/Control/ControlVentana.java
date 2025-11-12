@@ -9,7 +9,7 @@ import udistrital.avanzada.pacman.servidor.Vista.VentanaPrincipal;
 /**
  * Clase ControlVentana.
  * <p>
- * Descripción:
+ * Controlador que gestiona la navegación principal de la aplicacion
  * </p>
  *
  * @author Mauricio
@@ -21,6 +21,9 @@ public class ControlVentana implements ActionListener {
     private ControlPrincipal logica;
     private VentanaPrincipal ventanaPrincipal;
 
+    /**
+     * Constructor por defecto.
+     */
     public ControlVentana(ControlPrincipal logica) {
         this.logica = logica;
         this.ventanaPrincipal = new VentanaPrincipal();

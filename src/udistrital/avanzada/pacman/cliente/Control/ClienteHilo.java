@@ -19,16 +19,22 @@ class ClienteHilo extends Thread {
     private DataInputStream entrada;
     private MensajeListener listener;
 
+    /**
+     * Constructor
+     *
+     * @param entrada por donde escucha
+     * @param listener el que escucha y procesa mensajes
+     */
     public ClienteHilo(DataInputStream entrada, MensajeListener listener) {
         this.entrada = entrada;
         this.listener = listener;
     }
-    
+
     /**
      * Metodo custom para la lectura de mensajes del servidor de tipo string
-     * 
+     *
      * @return el string del mensaje
-     * @throws IOException 
+     * @throws IOException
      */
     private String readMessage() throws IOException {
         try {
@@ -45,6 +51,7 @@ class ClienteHilo extends Thread {
 
     }
 
+    @Override
     public void run() {
         String mensaje = "";
         String opcion = "";

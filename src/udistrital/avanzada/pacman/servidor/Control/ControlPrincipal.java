@@ -29,13 +29,19 @@ public class ControlPrincipal implements ConexionListener {
     private GestorArchivoAleatorio gAleatorio;
     private GestorArchivoProperties gPropiedades;
 
+    /**
+     * Constructor por defecto.
+     */
     public ControlPrincipal() {
         //this.propsDAO = new PropertiesDAO();
-        this.cVentana = new ControlVentana(this);   
+        this.cVentana = new ControlVentana(this);
         this.gPropiedades = new GestorArchivoProperties();
         preCarga();
     }
 
+    /**
+     * Metodo para la comprobacion y configuracion de los controladores
+     */
     public void preCarga() {
         File archivoPropiedades = cVentana.obtenerArchivoPropiedades(
                 "specs/data",
@@ -44,27 +50,26 @@ public class ControlPrincipal implements ConexionListener {
         //No escogio archivo o no carga retornar
         if (archivoPropiedades == null || !gPropiedades.cargar(archivoPropiedades)) {
             return;
-        }        
-        
+        }
+
         //Configurar Gestor de archivo aleatorio
         ConexionAleatorio conexionAleatorio = new ConexionAleatorio();
         //ruta donde se guarda debe ser escogida por usuario
         String carpeta = "specs/data/";
-        conexionAleatorio.setRuta(carpeta+"juegos.txt");
+        conexionAleatorio.setRuta(carpeta + "juegos.txt");
         AleatorioDAO aleatorioDAO = new AleatorioDAO(conexionAleatorio);
         //Si no exite la carpeta donde esta el archivo aleatorio retornar
         if (!aleatorioDAO.conexionValida()) {
             cVentana.mostrarMensajeConsola("Carpeta del archivo aleatorio no existe");
             return;
         }
-        this.gAleatorio = new GestorArchivoAleatorio(aleatorioDAO);        
-        
+        this.gAleatorio = new GestorArchivoAleatorio(aleatorioDAO);
+
         //Configurar conexion a base de datos y controladores que la utilizen
-        
-        ConexionProperties conexionProps = new ConexionProperties(archivoPropiedades.getAbsolutePath());        
+        ConexionProperties conexionProps = new ConexionProperties(archivoPropiedades.getAbsolutePath());
         //pasamos por inyeccion la conexion de propiedades 
         ConexionBD conexionBD = new ConexionBD(conexionProps);
-        
+
         //Comprobar conexion a base de datos si no hay retornar
         try (Connection conn = conexionBD.getConexion()) {
             if (conn == null || conn.isClosed()) {
@@ -76,11 +81,11 @@ public class ControlPrincipal implements ConexionListener {
             return;
         } finally {
             conexionBD.desconectar();
-        }                
+        }
         //Configurara conexion a controlador que la usa
         JugadorDAO jugadorDAO = new JugadorDAO(conexionBD);
-        ControlJugadores cJugadores = new ControlJugadores(jugadorDAO);
-        
+        ControlJugador cJugadores = new ControlJugador(jugadorDAO);
+
         //Insertar jugadores que hayan en el archivo de propiedades
         try {
             int nJugadores = Integer.parseInt(gPropiedades.getProperty("jugadores.cantidad"));
@@ -88,31 +93,31 @@ public class ControlPrincipal implements ConexionListener {
                 for (int i = 1; i <= nJugadores; i++) {
                     String usuario = gPropiedades.getProperty("jugador" + i + ".usuario");
                     String password = gPropiedades.getProperty("jugador" + i + ".password");
-                    if (usuario != null && password != null) {                        
-                        cJugadores.insertarJugador(usuario, password);                                    
+                    if (usuario != null && password != null) {
+                        cJugadores.insertarJugador(usuario, password);
                     }
                 }
             }
         } catch (Exception e) {
         }
-        
+
         //Levantar servidor de escucha
         //Configurar controlador de hilos
         this.cServidorHilo = new ControlServidorHilo(this, gAleatorio, cJugadores);
-        this.servidor = new Servidor(cServidorHilo);        
-        int puerto = -1;               
+        this.servidor = new Servidor(cServidorHilo);
+        int puerto = -1;
         try {
             puerto = Integer.parseInt(gPropiedades.getProperty("server.port"));
         } catch (Exception e) {
         }
-        
-        servidor.config(puerto);        
+
+        servidor.config(puerto);
         if (!servidor.levantarServidor()) {
             cVentana.mostrarMensajeEmergente("Info", "Puerto " + puerto + " ya usado");
             return;
         }
-        cVentana.mostrarMensajeConsola("escuchando en puerto: " + puerto);        
-        servidor.start();        
+        cVentana.mostrarMensajeConsola("escuchando en puerto: " + puerto);
+        servidor.start();
         //Despues de asegurar la conexion a BD y levantamiento del servidor mostrar ventana
         //Se hace necesario para poder cerrar el servidor cuando esta activo por primera vez y nadie
         //se va a conectar

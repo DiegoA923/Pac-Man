@@ -16,11 +16,22 @@ public class ControlCliente {
     private Cliente cliente;
     private ClienteHilo hilo;
 
+    /**
+     * Constructor por defecto.
+     */
     public ControlCliente() {
         this.cliente = new Cliente();
         this.hilo = null;
     }
 
+    /**
+     * Contructor
+     *
+     * @param ip direccion ip
+     * @param puerto puerto de conexion
+     * @param ml quien escucha los mensajes de entrada
+     * @return
+     */
     public boolean conectar(String ip, int puerto, MensajeListener ml) {
         //cerrar conexion anterior si esta activa
         if (cliente.estaConectado()) {

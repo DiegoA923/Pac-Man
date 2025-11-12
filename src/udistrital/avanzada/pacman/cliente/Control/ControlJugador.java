@@ -18,13 +18,16 @@ public class ControlJugador {
     private JugadorVO jugador;
     private IJugadorDAO jugadorDAO;
 
+    /**
+     * Constructor por defecto.
+     */
     public ControlJugador() {
         this.jugador = null;
     }
-    
+
     /**
      * Metodo para cargar jugador desde el DAO
-     * 
+     *
      * @return true si usuario valido encontrado sino false
      */
     public boolean cargarJugador() throws RuntimeException {
@@ -34,7 +37,7 @@ public class ControlJugador {
         jugador = jugadorDAO.getJugador();
         if (jugador.getNombre() == null || jugador.getContrasena() == null) {
             return false;
-        }        
+        }
         return true;
     }
 
@@ -45,7 +48,7 @@ public class ControlJugador {
      */
     public String[] getDatosJugador() {
         jugador = jugadorDAO.getJugador();
-        String[] datos = {"",""};
+        String[] datos = {"", ""};
         if (jugador != null) {
             datos[0] = jugador.getNombre();
             datos[1] = jugador.getContrasena();
@@ -53,10 +56,18 @@ public class ControlJugador {
         return datos;
     }
 
+    /**
+     * asignar el dao
+     *
+     * @param jugadorDAO
+     */
     public void setJugadorDAO(IJugadorDAO jugadorDAO) {
         this.jugadorDAO = jugadorDAO;
     }
-    
+
+    /**
+     * resetear el jugador
+     */
     public void resetJugador() {
         this.jugador = null;
     }
