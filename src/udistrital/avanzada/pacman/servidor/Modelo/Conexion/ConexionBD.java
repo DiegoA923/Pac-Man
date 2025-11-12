@@ -49,7 +49,7 @@ public class ConexionBD implements IConexionBD {
             try {
                 conexion.close();
             } catch (SQLException e) {
-                System.err.println("Error al cerrar conexión: " + e.getMessage());
+                
             }
             conexion = null;
         }
