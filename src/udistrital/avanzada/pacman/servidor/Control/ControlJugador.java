@@ -26,6 +26,7 @@ public class ControlJugador {
      */
     public ControlJugador(IJugadorDAO dao) {
         this.dao = dao;
+        this.jugadores = new ArrayList<>();
     }
 
     /**
